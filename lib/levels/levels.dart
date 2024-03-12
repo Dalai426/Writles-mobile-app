@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -10,6 +11,7 @@ class Levels{
   int reading_wav_index=0;
   int level=0;
   File? wav_title;
+  AudioPlayer p1=AudioPlayer();
 
   Timer? delayTimer;
 
@@ -21,6 +23,10 @@ class Levels{
 
   void dispose() async {
     cancelDelay();
+    if (p1.state != PlayerState.disposed) {
+      p1.pause();
+      p1.dispose();
+    }
     final dir = Directory((await getApplicationDocumentsDirectory()).path + "/wavs");
     if (await dir.exists()) {
       dir.deleteSync(recursive: true);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:writless/Components/tabs.dart';
-import 'package:writless/providers/generalProvider.dart';
+import 'package:writles/Components/tabs.dart';
+import 'package:writles/providers/generalProvider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

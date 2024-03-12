@@ -1,15 +1,12 @@
 import 'dart:async';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:logger/logger.dart';
 import 'package:progress_border/progress_border.dart';
-import 'package:writless/components/entity/RetValAudio.dart';
-import 'package:writless/components/entity/ScreenArguments.dart';
-import 'package:writless/levels/Level_four.dart';
-import 'package:writless/levels/Level_three.dart';
-import 'package:writless/levels/Level_two.dart';
-
+import 'components/entity/ScreenArguments.dart';
+import 'levels/Level_four.dart';
+import 'levels/Level_three.dart';
+import 'levels/Level_two.dart';
 import 'levels/level_one.dart';
 
 class ReaderPage extends StatefulWidget {
@@ -27,8 +24,8 @@ class _ReaderPage extends State<ReaderPage>
   late int count_text;
   String? title;
   int level = 1;
-  var tts;
-  RetValAudio? player_info;
+  dynamic tts;
+  StreamSubscription? player_info;
   double progress = 0.0;
   bool fetching = true;
 
@@ -43,18 +40,18 @@ class _ReaderPage extends State<ReaderPage>
   getData() async {
     level = widget.argument!.level.toInt();
     if(level==1){
-      tts = Level_one();
+      tts = LevelOne();
     }else if(level==2){
-      tts=Level_two();
+      tts=LevelTwo();
     }else if(level==3){
-      tts=Level_three();
+      tts=LevelThree();
     }else{
-      tts=Level_four();
+      tts=LevelFour();
     }
 
 
     String replacedText = widget.argument!.title.replaceAll(RegExp(r'\s+'), '');
-    if (!replacedText.isEmpty) {
+    if (replacedText.isNotEmpty) {
       title = widget.argument!.title;
       await tts.init(widget.argument!.text, level, title: title);
     } else {
@@ -75,12 +72,11 @@ class _ReaderPage extends State<ReaderPage>
 
 
   void _onPlay() async {
+    await tts.cancelDelay();
+    await tts.p1.stop();
     if(tts.reading_wav_index<tts.count_text){
       if(player_info!=null){
-        if(player_info!.palyer.state!=PlayerState.disposed){
-          player_info!.palyer.dispose();
-        }
-        player_info!.streamSubscription.cancel();
+        await player_info!.cancel();
       }
       player_info = await tts.nextWav(context, _onPlay);
       progress = tts.reading_wav_index.toDouble() / count_text.toDouble();
@@ -90,7 +86,7 @@ class _ReaderPage extends State<ReaderPage>
 
   void _prev() async {
     if(player_info!=null){
-      player_info!.streamSubscription.cancel();
+      player_info!.cancel();
     }
     tts.prevWav();
     progress = tts.reading_wav_index.toDouble() / count_text.toDouble();
@@ -99,23 +95,7 @@ class _ReaderPage extends State<ReaderPage>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
-
-
-    try {
-      if (player_info != null) {
-        player_info!.streamSubscription.cancel();
-        if (player_info!.palyer.state != PlayerState.disposed) {
-          player_info!.palyer.stop();
-          player_info!.palyer.dispose();
-          logger.t("in dispsed state");
-        }
-      }
-    }catch(err){
-      logger.t("end aldaatai bainashdee bro");
-    }
-
     try{
       tts.dispose();
     }catch(err){
@@ -136,7 +116,7 @@ class _ReaderPage extends State<ReaderPage>
               child: Center(
                   child: Container(
               padding:
-                  EdgeInsets.only(left: 20, right: 20, top: 60, bottom: 20),
+                  const EdgeInsets.only(left: 20, right: 20, top: 60, bottom: 20),
               child: Column(
                 children: [
                   Row(
@@ -150,7 +130,7 @@ class _ReaderPage extends State<ReaderPage>
                       PopupMenuButton(
                           color: Colors.white,
                           surfaceTintColor: Colors.white,
-                          shape: RoundedRectangleBorder(
+                          shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(14.0))),
                           icon: Icon(

@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:writless/providers/generalProvider.dart';
+import 'package:writles/providers/generalProvider.dart';
 
 class UserInfoPage extends StatefulWidget {
   const UserInfoPage({super.key, required this.title});

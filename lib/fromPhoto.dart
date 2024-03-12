@@ -5,9 +5,9 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:writless/providers/generalProvider.dart';
-import 'package:writless/utils/image_helper.dart';
-import 'package:writless/utils/ocr.dart';
+import 'package:writles/providers/generalProvider.dart';
+import 'package:writles/utils/image_helper.dart';
+import 'package:writles/utils/ocr.dart';
 
 final imageHelper = ImageHelper();
 

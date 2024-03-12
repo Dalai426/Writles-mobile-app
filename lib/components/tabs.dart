@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:writless/Components/tabs/tabwithphoto.dart';
-import 'package:writless/Components/tabs/tabwithtext.dart';
+import 'package:writles/Components/tabs/tabwithphoto.dart';
+import 'package:writles/Components/tabs/tabwithtext.dart';
 
 class Tabs extends StatefulWidget {
   const Tabs({super.key, required this.title});

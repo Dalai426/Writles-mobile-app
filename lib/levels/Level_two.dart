@@ -1,108 +1,90 @@
-
 import 'dart:async';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:writless/components/entity/RetValAudio.dart';
-
 import 'levels.dart';
 import 'dart:io';
 import 'package:logger/logger.dart';
 
 
-class Level_two extends Levels{
+class LevelTwo extends Levels{
 
-  Map<int,List<File?>> level_one_wavs=new Map();
+  List<List<File?>> level_one_wavs = [];
   List<File?> wavs=[];
   var logger = Logger();
 
 
-  Level_two();
+  LevelTwo();
 
   void init(String text, int level, {String? title}) async {
-
     List<String> strings = text.trim().split(RegExp(r'\s+'));
-    String NUM_API = dotenv.get("NLP_NUM_API", fallback: "");
+    String apiflask = dotenv.get("API_FLASK", fallback: "");
+    String flaskapikey = dotenv.get("FLASK_API_KEY_VALUE", fallback: "");
+    final Map<String, String> header = {"X-API-KEY": flaskapikey};
 
+    count_text = strings.length;
 
-    count_text=strings.length;
+    String dir = "${(await getApplicationDocumentsDirectory()).path}/wavs";
 
-    String dir = (await getApplicationDocumentsDirectory()).path+"/wavs";
-
-
-    if(!await Directory(dir).existsSync()) {
+    if (!Directory(dir).existsSync()) {
       await Directory(dir).create(recursive: true);
     }
 
-
-    Map<int, List<String>> map_vye=spilitWithVye(strings);
-
-
-    map_vye.entries.forEach((e) async {
-
-
-      if(e.value.length<=1){
-        level_one_wavs[e.key]=[];
-      }else {
-        final files = await Future.wait(e.value
-            .asMap()
-            .entries
-            .map((w) async {
-          final Map<String, String> queryParams = {
-            'voice': '3',
-            'text': '${w.value}',
-          };
-          var uri = await Uri.http(NUM_API, 'nlp-web-demo/tts', queryParams);
-          http.Response response = await http.get(uri);
-          if (response.statusCode == 200) {
-            File file = File('${dir}/vye_${e.key}_${w.key}_wav.wav');
-            file.writeAsBytes(response.bodyBytes);
-            return file;
-          } else {
-            return null;
-          }
-        }).toList());
-
-        level_one_wavs[e.key]=files;
-      }
-
+    var dalai = spilitWithVye(strings).entries.map((e) async {
+      final List<Future<File?>> downloadFutures =
+      e.value.asMap().entries.map((w) async {
+        final Map<String, String> queryParams = {
+          'voice': 'female3',
+          'text': w.value,
+        };
+        var uri = Uri.http(apiflask, 'tts/extract', queryParams);
+        http.Response response = await http.get(uri, headers: header);
+        if (response.statusCode == 200) {
+          File file = File('${dir}/vye_${e.key}_${w.key}_wav.wav');
+          file.writeAsBytes(response.bodyBytes);
+          return file;
+        } else {
+          return null;
+        }
+      }).toList();
+      final List<File?> files = await Future.wait(downloadFutures);
+      return files;
     });
 
-
-    final  resp=await Future.wait(strings.asMap().entries.map((entry) async {
+    final resp = strings.asMap().entries.map((entry) async {
       int index = entry.key;
       String word = entry.value;
       final Map<String, String> queryParams = {
-        'voice': '3',
-        'text': '${word}',
+        'voice': 'female3',
+        'text': word,
       };
-      var uri = await Uri.http(NUM_API, 'nlp-web-demo/tts',queryParams);
-      http.Response response=await http.get(uri);
+      var uri = Uri.http(apiflask, 'tts/extract', queryParams);
+      http.Response response = await http.get(uri, headers: header);
       if (response.statusCode == 200) {
         File file = File('${dir}/${index}_wav.wav');
         file.writeAsBytes(response.bodyBytes);
         return file;
-      }else{
+      } else {
         return null;
       }
-    }).toList());
+    });
 
-    wavs.addAll(resp);
+    level_one_wavs.addAll(await Future.wait(dalai));
+    wavs.addAll(await Future.wait(resp));
   }
 
 
 
 
-  Future<RetValAudio?> nextWav(BuildContext context, Function function) async {
+  Future<StreamSubscription?> nextWav(BuildContext context, Function function) async {
 
     File? ret;
     List<File?>? semis;
+    StreamSubscription? streamSubscription;
 
-    cancelDelay();
 
     try {
       if (reading_wav_index >= count_text) {
@@ -115,50 +97,39 @@ class Level_two extends Levels{
         reading_wav_index++;
       }
 
-
-      AudioPlayer p1 = new AudioPlayer();
       int i = 0;
       int count=1;
       bool ex=false;
 
-      StreamSubscription streamSubscription=p1.onPlayerComplete.listen((event) async {
-        logger.t(i);
+      streamSubscription=p1.onPlayerComplete.listen((event){
 
         if(ex){
-          delayTimer=Timer(Duration(milliseconds: 8000), (){
+          delayTimer=Timer(const Duration(milliseconds: 8000), (){
             function();
           });
         }else{
-
           if (semis!.elementAtOrNull(i) != null) {
-            logger.t("in here yeoo");
             int second=1000;
             if(i==0){
-              second=5000;
+              second=4000;
             }
             delayTimer=Timer(Duration(milliseconds: second),(){
-              if(p1.state!=PlayerState.disposed) {
                 p1.play(DeviceFileSource(semis!.elementAt(i)!.path));
                 i++;
-              }
             });
           } else {
             if(i!=0){
               count++;
             }
             if(count<2){
-              delayTimer=Timer(Duration(milliseconds: 5000),() {
-                if(p1.state!=PlayerState.disposed) {
+              delayTimer=Timer(const Duration(milliseconds: 4000),() {
                   count++;
                   p1.play(DeviceFileSource(ret!.path));
-                }
               });
             }else{
-              delayTimer=Timer(Duration(milliseconds: 5000),(){
-                if(p1.state!=PlayerState.disposed) {
+              delayTimer=Timer(const Duration(milliseconds: 4000),(){
                   ex = true;
                   p1.play(DeviceFileSource(ret!.path));
-                }
               });
             }
           }
@@ -166,12 +137,10 @@ class Level_two extends Levels{
       });
 
       if (ret != null) {
-        delayTimer=Timer(Duration(milliseconds: 1000),() {
-          if(p1.state!=PlayerState.disposed) {
-            p1.play(DeviceFileSource(ret!.path));
-          }
+        delayTimer=Timer(const Duration(milliseconds: 1000),() async {
+            await p1.play(DeviceFileSource(ret!.path));
         });
-        return RetValAudio(palyer: p1, streamSubscription: streamSubscription);
+        return streamSubscription;
       }
 
 
@@ -186,11 +155,10 @@ class Level_two extends Levels{
         ),
       ).show(context);
 
-      return null;
+      return streamSubscription;
     }
 
-    return null;
-
+    return streamSubscription;
   }
 
   void prevWav() async {
@@ -212,8 +180,6 @@ class Level_two extends Levels{
 
     for(int val=0; val<_strings.length; val++){
 
-      _strings[val] = _strings[val].replaceAll(RegExp(r'[^\p{L}\p{N}\s]+', unicode: true), '');
-
       List<String> vye=[];
       String stack="";
       for (int i = 0; i < _strings[val].length; i++) {
@@ -226,7 +192,6 @@ class Level_two extends Levels{
 
               if(!checkEgshig(_strings[val][i+1])){
 
-                // todo boljmor beltgev
                 if(i+1==_strings[val].length-1){
                   // 2 giigvvlegch daraalj orson ch 2 deh giigvvlegch ni vgiin tugsguld baih bol
                   stack+=_strings[val][i];

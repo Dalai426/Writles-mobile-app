@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:writless/providers/generalProvider.dart';
+import 'package:writles/providers/generalProvider.dart';
 
 class FromTextPage extends StatefulWidget {
   const FromTextPage({super.key, required this.title});

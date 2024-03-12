@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:writless/finish.dart';
-import 'package:writless/navigator.dart';
-import 'package:writless/providers/generalProvider.dart';
-import 'package:writless/readerScreen.dart';
+import 'package:writles/finish.dart';
+import 'package:writles/navigator.dart';
+import 'package:writles/providers/generalProvider.dart';
+import 'package:writles/readerScreen.dart';
 
 void main() async {
   await dotenv.load(fileName: '.env');

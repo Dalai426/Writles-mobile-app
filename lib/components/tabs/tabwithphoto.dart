@@ -6,7 +6,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:writless/utils/image_helper.dart';
+import 'package:writles/utils/image_helper.dart';
 
 import '../../providers/generalProvider.dart';
 import '../../utils/ocr.dart';

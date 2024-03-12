@@ -2,14 +2,14 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:writless/components/entity/ScreenArguments.dart';
-import 'package:writless/fromPhoto.dart';
-import 'package:writless/fromText.dart';
-import 'package:writless/home.dart';
-import 'package:writless/providers/generalProvider.dart';
-import 'package:writless/readerScreen.dart';
-import 'package:writless/userInfoPage.dart';
-import 'package:writless/utils/checkTextLen.dart';
+import 'package:writles/components/entity/ScreenArguments.dart';
+import 'package:writles/fromPhoto.dart';
+import 'package:writles/fromText.dart';
+import 'package:writles/home.dart';
+import 'package:writles/providers/generalProvider.dart';
+import 'package:writles/readerScreen.dart';
+import 'package:writles/userInfoPage.dart';
+import 'package:writles/utils/checkTextLen.dart';
 
 
 class NavigatorPage extends StatelessWidget {

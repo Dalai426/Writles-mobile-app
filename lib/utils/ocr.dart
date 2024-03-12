@@ -17,11 +17,14 @@ Future<String?> ocrText(File file, context) async {
     "Content-Type": "multipart/form-data"
   };
 
-  var uri = Uri.http(url, 'ocr');
+  var uri = Uri.http(url, 'ocr/extract');
 
   var request = http.MultipartRequest('POST', uri)
     ..headers.addAll(header)
     ..files.add(await http.MultipartFile.fromPath('img', file.path));
+
+  print(request);
+
   try {
     var res = await request.send();
     http.Response response = await http.Response.fromStream(res);
@@ -31,7 +34,7 @@ Future<String?> ocrText(File file, context) async {
       Map<String, dynamic> responseBodyJson = json.decode(response.body);
       CherryToast.error(
         title: Text(
-          responseBodyJson['msg'],
+          responseBodyJson['detail'],
           style: Theme.of(context)
               .textTheme
               .labelSmall!
