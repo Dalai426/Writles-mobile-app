@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:writles/providers/generalProvider.dart';
@@ -17,7 +16,7 @@ class _FromTextPage extends State<FromTextPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         height: MediaQuery.of(context).size.height - 57,
         child:SingleChildScrollView(
           child:Stack(alignment: Alignment.center, children: [
@@ -32,7 +31,7 @@ class _FromTextPage extends State<FromTextPage> {
                   BoxShadow(
                       blurRadius: 100,
                       spreadRadius: 100,
-                      color: Color(0xFFFFDBC5).withOpacity(0.3))
+                      color: const Color(0xFFFFDBC5).withOpacity(0.3))
                 ],
               ),
             ),
@@ -48,24 +47,23 @@ class _FromTextPage extends State<FromTextPage> {
                   BoxShadow(
                       blurRadius: 100,
                       spreadRadius: 100,
-                      color: Color(0xFFFFDBC5).withOpacity(0.3))
+                      color: const Color(0xFFFFDBC5).withOpacity(0.3))
                 ],
               ),
             ),
           ),
           Container(
-              padding: EdgeInsets.only(left: 10, right: 10, bottom: 20),
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
               child: Column(
                 children: <Widget>[
-                  SizedBox(
-                    height: 40,
+                  const SizedBox(
+                    height: 50,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SizedBox(width: 1,),
                       Text(
-                        "Хэрэглэгчийн цээж бичгийн түвшин :",
+                        "Цээж бичгийн түвшин :",
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -76,11 +74,10 @@ class _FromTextPage extends State<FromTextPage> {
                         "Түвшин ${context.read<GeneralProvider>().userLevel.toInt()}",
                         style: Theme.of(context)
                             .textTheme
-                            .labelLarge!
+                            .labelMedium!
                             .copyWith(
                                 color: Theme.of(context).colorScheme.primary),
                       ),
-                      SizedBox(width: 1,),
                     ],
                   ),
                   const SizedBox(
@@ -125,7 +122,7 @@ class _FromTextPage extends State<FromTextPage> {
                         Row(
                           children: [
                             Container(
-                              height: 30,
+                              height: 25,
                               width: 4,
                               color: Theme.of(context).colorScheme.secondary,
                             ),
@@ -135,7 +132,7 @@ class _FromTextPage extends State<FromTextPage> {
                             Text("Гарчиг",
                                 style: Theme.of(context)
                                     .textTheme
-                                    .labelLarge!
+                                    .bodyMedium!
                                     .copyWith(
                                         color: Theme.of(context)
                                             .colorScheme
@@ -149,7 +146,7 @@ class _FromTextPage extends State<FromTextPage> {
                           controller: context.read<GeneralProvider>().garchig,
                           style: Theme.of(context)
                               .textTheme
-                              .labelLarge!
+                              .bodyMedium!
                               .copyWith(
                                   color: Theme.of(context).colorScheme.primary),
                           decoration: InputDecoration(
@@ -163,7 +160,7 @@ class _FromTextPage extends State<FromTextPage> {
                                 vertical: 10, horizontal: 10),
                             hintStyle: Theme.of(context)
                                 .textTheme
-                                .labelLarge!
+                                .bodyMedium!
                                 .copyWith(
                                     color:
                                         Theme.of(context).colorScheme.surface),
@@ -177,7 +174,7 @@ class _FromTextPage extends State<FromTextPage> {
                         Row(
                           children: [
                             Container(
-                              height: 30,
+                              height: 25,
                               width: 4,
                               color: Theme.of(context).colorScheme.secondary,
                             ),
@@ -187,7 +184,7 @@ class _FromTextPage extends State<FromTextPage> {
                             Text("Эх",
                                 style: Theme.of(context)
                                     .textTheme
-                                    .labelLarge!
+                                    .bodyMedium!
                                     .copyWith(
                                         color: Theme.of(context)
                                             .colorScheme
@@ -200,12 +197,12 @@ class _FromTextPage extends State<FromTextPage> {
                         TextField(
                           controller: context.read<GeneralProvider>().eh,
                           textAlign: TextAlign.justify,
-                          minLines: 11,
+                          minLines: 14,
                           maxLines: null,
                           keyboardType: TextInputType.multiline,
                           style: Theme.of(context)
                               .textTheme
-                              .labelLarge!
+                              .bodyMedium!
                               .copyWith(
                                   color: Theme.of(context).colorScheme.primary),
                           decoration: InputDecoration(
@@ -219,7 +216,7 @@ class _FromTextPage extends State<FromTextPage> {
                                 vertical: 10, horizontal: 10),
                             hintStyle: Theme.of(context)
                                 .textTheme
-                                .labelLarge!
+                                .bodyMedium!
                                 .copyWith(
                                     color:
                                         Theme.of(context).colorScheme.surface),
@@ -235,7 +232,7 @@ class _FromTextPage extends State<FromTextPage> {
                   ),
                   InkWell(
                       child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                     decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
@@ -251,7 +248,7 @@ class _FromTextPage extends State<FromTextPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Notfication ашиглан дараа тоглуулах",
+                          "Цээж бичиг сануулах",
                           style: Theme.of(context)
                               .textTheme
                               .labelMedium!

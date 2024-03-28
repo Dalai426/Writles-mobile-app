@@ -1,7 +1,3 @@
-
-
-
-
 class ScreenArguments {
   final String title;
   final String text;

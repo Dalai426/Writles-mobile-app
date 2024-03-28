@@ -43,7 +43,7 @@ class LevelTwo extends Levels{
         var uri = Uri.http(apiflask, 'tts/extract', queryParams);
         http.Response response = await http.get(uri, headers: header);
         if (response.statusCode == 200) {
-          File file = File('${dir}/vye_${e.key}_${w.key}_wav.wav');
+          File file = File('$dir/vye_${e.key}_${w.key}_wav.wav');
           file.writeAsBytes(response.bodyBytes);
           return file;
         } else {
@@ -176,7 +176,7 @@ class LevelTwo extends Levels{
   Map<int,List<String>> spilitWithVye(List<String> _strings){
 
 
-    Map<int, List<String>> map=Map();
+    Map<int, List<String>> map={};
 
     for(int val=0; val<_strings.length; val++){
 

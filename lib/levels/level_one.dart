@@ -34,7 +34,7 @@ class LevelOne extends Levels {
 
     var dalai = spilitWithVye(strings).entries.map((e) async {
       final List<Future<File?>> downloadFutures =
-          e.value.asMap().entries.map((w) async {
+      e.value.asMap().entries.map((w) async {
         final Map<String, String> queryParams = {
           'voice': 'female3',
           'text': w.value,
@@ -74,8 +74,6 @@ class LevelOne extends Levels {
     level_one_wavs.addAll(await Future.wait(dalai));
     wavs.addAll(await Future.wait(resp));
   }
-
-
 
   Future<StreamSubscription?> nextWav(BuildContext context, Function function) async {
 

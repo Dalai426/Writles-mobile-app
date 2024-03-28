@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,46 +15,46 @@ class _Tabwithtext extends State<tabwithtext> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        padding: EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 10),
+        padding: const EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("Гарчиг",
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       color: Theme.of(context).colorScheme.secondary,
                     )),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextField(
               controller: context.read<GeneralProvider>().garchig,
               style: Theme.of(context)
                   .textTheme
-                  .labelMedium!
+                  .bodyMedium!
                   .copyWith(color: Theme.of(context).colorScheme.primary),
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
                 ),
                 contentPadding:
-                    EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 hintStyle: Theme.of(context)
                     .textTheme
-                    .labelMedium!
+                    .bodyMedium!
                     .copyWith(color: Theme.of(context).colorScheme.surface),
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 hintText: 'Цээж бичгийн гарчгийг оруулна',
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Text("Эх",
                 style: Theme.of(context)
                     .textTheme
-                    .labelMedium!
+                    .bodyMedium!
                     .copyWith(color: Theme.of(context).colorScheme.secondary)),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextField(
@@ -66,7 +65,7 @@ class _Tabwithtext extends State<tabwithtext> {
               keyboardType: TextInputType.multiline,
               style: Theme.of(context)
                   .textTheme
-                  .labelMedium!
+                  .bodyMedium!
                   .copyWith(color: Theme.of(context).colorScheme.primary),
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
@@ -74,12 +73,12 @@ class _Tabwithtext extends State<tabwithtext> {
                       color: Theme.of(context).colorScheme.secondary),
                 ),
                 contentPadding:
-                    EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 hintStyle: Theme.of(context)
                     .textTheme
-                    .labelMedium!
+                    .bodyMedium!
                     .copyWith(color: Theme.of(context).colorScheme.surface),
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
                 hintText: 'Цээж бичгийн эхийг энд оруулна',
               ),
             ),

@@ -15,6 +15,15 @@ class GeneralProvider with ChangeNotifier, DiagnosticableTreeMixin {
   TextEditingController garchig=TextEditingController();
   TextEditingController eh=TextEditingController();
 
+  bool verified_otp=false;
+  int verify_start=180;
+  String? otp;
+
+  void dec_sec(){
+    verify_start--;
+    notifyListeners();
+  }
+
 
 
   void changeLevel(double level){
@@ -34,7 +43,7 @@ class GeneralProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }else{
       bool wt=await checkTextNull(context.read<GeneralProvider>().eh.text);
       if(!wt){
-        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>ReaderPage(argument: new ScreenArguments(
+        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>ReaderPage(argument: ScreenArguments(
             garchig.text,
             eh.text,
             userLevel

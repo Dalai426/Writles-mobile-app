@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heif_converter/heif_converter.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -30,7 +29,7 @@ class _Tabwithphoto extends State<tabwithphoto> {
     var file = await imageHelper.pickImage(imageQuality: 100);
 
     if (file != null) {
-      String imagePathLowerCase = await file.path.toLowerCase();
+      String imagePathLowerCase = file.path.toLowerCase();
 
       if (imagePathLowerCase.contains('heic')) {
         String? pngPath = await HeifConverter.convert(file.path, format: 'png');
@@ -66,16 +65,16 @@ class _Tabwithphoto extends State<tabwithphoto> {
                             onTap: _handleTap,
                             child: Container(
                               decoration: BoxDecoration(
-                                border: Border(
+                                border: const Border(
                                     right: BorderSide(
                                         color: Colors.white, width: 2)),
-                                borderRadius: BorderRadius.only(
+                                borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(10),
                                     bottomLeft: Radius.circular(10)),
                                 color: Theme.of(context).colorScheme.primary,
                               ),
                               alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(vertical: 7),
+                              padding: const EdgeInsets.symmetric(vertical: 7),
                               child: Text(
                                 "Зураг оруулах",
                                 style: Theme.of(context)
@@ -106,16 +105,16 @@ class _Tabwithphoto extends State<tabwithphoto> {
                             },
                             child: Container(
                                 decoration: BoxDecoration(
-                                  border: Border(
+                                  border: const Border(
                                       left: BorderSide(
                                           color: Colors.white, width: 2)),
-                                  borderRadius: BorderRadius.only(
+                                  borderRadius: const BorderRadius.only(
                                       topRight: Radius.circular(10),
                                       bottomRight: Radius.circular(10)),
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
                                 alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(vertical: 7),
+                                padding: const EdgeInsets.symmetric(vertical: 7),
                                 child: Text(
                                   "Хөрвүүлэх",
                                   style: Theme.of(context)
@@ -131,31 +130,29 @@ class _Tabwithphoto extends State<tabwithphoto> {
                             onTap: _handleTap,
                             child: Column(
                               children: [
-                                SizedBox(
+                                const SizedBox(
                                   height: 60,
                                 ),
+                                const Image(
+                                    image: AssetImage("img/camera.png"),
+                                    width: 150),
+                                const SizedBox(height:15,),
                                 Text(
                                   "Энд дараад зургаа оруулаарай",
                                   style: Theme.of(context)
                                       .textTheme
-                                      .titleMedium!
+                                      .labelMedium!
                                       .copyWith(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .surface),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .surface),
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Image(
-                                    image: AssetImage("img/camera.png"),
-                                    width: 150)
                               ],
                             ),
                           )
                         : Column(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               Image.file(
@@ -165,7 +162,7 @@ class _Tabwithphoto extends State<tabwithphoto> {
                             ],
                           )
                     : Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                             top: 15, bottom: 10, left: 15, right: 15),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,13 +170,13 @@ class _Tabwithphoto extends State<tabwithphoto> {
                             Text("Гарчиг",
                                 style: Theme.of(context)
                                     .textTheme
-                                    .labelMedium!
+                                    .bodyMedium!
                                     .copyWith(
                                       color: Theme.of(context)
                                           .colorScheme
                                           .secondary,
                                     )),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             TextField(
@@ -187,54 +184,7 @@ class _Tabwithphoto extends State<tabwithphoto> {
                                   context.read<GeneralProvider>().garchig,
                               style: Theme.of(context)
                                   .textTheme
-                                  .labelMedium!
-                                  .copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                hintStyle: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .surface),
-                                border: OutlineInputBorder(),
-                                hintText: 'Цээж бичгийн гарчгийг оруулна',
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text("Эх",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary)),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            TextField(
-                              controller: context.read<GeneralProvider>().eh,
-                              textAlign: TextAlign.justify,
-                              minLines: 9,
-                              maxLines: null,
-                              keyboardType: TextInputType.multiline,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
+                                  .bodyMedium!
                                   .copyWith(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -250,12 +200,59 @@ class _Tabwithphoto extends State<tabwithphoto> {
                                     vertical: 10, horizontal: 10),
                                 hintStyle: Theme.of(context)
                                     .textTheme
-                                    .labelMedium!
+                                    .bodyMedium!
                                     .copyWith(
                                         color: Theme.of(context)
                                             .colorScheme
                                             .surface),
-                                border: OutlineInputBorder(),
+                                border: const OutlineInputBorder(),
+                                hintText: 'Цээж бичгийн гарчгийг оруулна',
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Text("Эх",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary)),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            TextField(
+                              controller: context.read<GeneralProvider>().eh,
+                              textAlign: TextAlign.justify,
+                              minLines: 9,
+                              maxLines: null,
+                              keyboardType: TextInputType.multiline,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 10),
+                                hintStyle: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .surface),
+                                border: const OutlineInputBorder(),
                                 hintText: 'Цээж бичгийн эхийг энд оруулна',
                               ),
                             ),

@@ -29,7 +29,7 @@ class _ReaderPage extends State<ReaderPage>
   double progress = 0.0;
   bool fetching = true;
 
-  Logger logger = new Logger();
+  Logger logger =  Logger();
 
   @override
   void initState() {
@@ -47,9 +47,7 @@ class _ReaderPage extends State<ReaderPage>
       tts=LevelThree();
     }else{
       tts=LevelFour();
-    }
-
-
+    };
     String replacedText = widget.argument!.title.replaceAll(RegExp(r'\s+'), '');
     if (replacedText.isNotEmpty) {
       title = widget.argument!.title;
@@ -141,7 +139,7 @@ class _ReaderPage extends State<ReaderPage>
                           itemBuilder: (context) {
                             return <PopupMenuEntry<int>>[
                               PopupMenuItem(
-                                child: ListTile(
+                                child: const ListTile(
                                   leading: Icon(Icons.read_more),
                                   title: Text("Эхийг унших"),
                                 ),
@@ -153,7 +151,7 @@ class _ReaderPage extends State<ReaderPage>
                           })
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 40,
                   ),
                   GestureDetector(
@@ -161,8 +159,8 @@ class _ReaderPage extends State<ReaderPage>
                         Navigator.pushNamed(context, '/finish');
                       },
                       child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          padding: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(
                               vertical: 15, horizontal: 20),
                           decoration: BoxDecoration(
                               border: Border(
@@ -204,13 +202,13 @@ class _ReaderPage extends State<ReaderPage>
                               ),
                             ],
                           ))),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   GestureDetector(
                       onTap: _prev,
                       child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           padding: EdgeInsets.symmetric(
                               vertical: 15, horizontal: 20),
                           decoration: BoxDecoration(
@@ -256,7 +254,7 @@ class _ReaderPage extends State<ReaderPage>
                               )
                             ],
                           ))),
-                  SizedBox(
+                  const SizedBox(
                     height: 40,
                   ),
                   Text(
@@ -266,11 +264,11 @@ class _ReaderPage extends State<ReaderPage>
                         .displayLarge!
                         .copyWith(color: Theme.of(context).colorScheme.primary),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
                         children: [
                           Container(
@@ -296,7 +294,7 @@ class _ReaderPage extends State<ReaderPage>
                           ),
                         ],
                       )),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                   AspectRatio(
@@ -308,10 +306,10 @@ class _ReaderPage extends State<ReaderPage>
                                 shape: BoxShape.circle,
                                 color: Theme.of(context).colorScheme.primary,
                                 border: ProgressBorder.all(
-                                    color: Color(0XFFFFFF).withOpacity(0.4),
+                                    color: const Color(0XFFFFFFFF).withOpacity(0.4),
                                     width: 10,
                                     progress: progress)),
-                            child: Image(image: AssetImage("img/forward.png"))),
+                            child: const Image(image: AssetImage("img/forward.png"))),
                       ))
                 ],
               ),
@@ -335,7 +333,7 @@ class _ReaderPage extends State<ReaderPage>
             expand: false,
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 child: ListView(
                   controller: scrollController,
                   children: [
@@ -375,7 +373,7 @@ class _ReaderPage extends State<ReaderPage>
                     ),
                     Container(
                         child: Text(
-                      "${widget.argument!.text}",
+                      widget.argument!.text,
                       style: Theme.of(context).textTheme.labelLarge!.copyWith(
                           color: Theme.of(context).colorScheme.primary),
                       textAlign: TextAlign.justify,

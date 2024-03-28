@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FinishPage extends StatefulWidget {
@@ -25,20 +24,20 @@ class _FinishPage extends State<FinishPage> {
                     color: Theme.of(context).colorScheme.tertiary,
                   ),
                 ),
-                Image(
+                const Image(
                   image: AssetImage("img/Thankyou.png"),
                 ),
-                Container(
+                SizedBox(
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: [
-                      SizedBox(height: 80,),
+                      const SizedBox(height: 80,),
                       GestureDetector(
                           onTap: () async {
                           },
                           child: Container(
-                              margin: EdgeInsets.symmetric(horizontal: 50),
-                              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                              margin: const EdgeInsets.symmetric(horizontal: 50),
+                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                               decoration: BoxDecoration(
                                   border: Border(
                                       top: BorderSide(
@@ -50,7 +49,7 @@ class _FinishPage extends State<FinishPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  Image(
+                                  const Image(
                                     image: AssetImage("img/ig.png"),
                                     width: 30,
                                   ),
@@ -64,7 +63,7 @@ class _FinishPage extends State<FinishPage> {
                                             .colorScheme
                                             .primary),
                                   ),
-                                  Image(
+                                  const Image(
                                     image: AssetImage("img/ig.png"),
                                     width: 30,
                                   ),
@@ -78,7 +77,7 @@ class _FinishPage extends State<FinishPage> {
           )
       ),
       floatingActionButton: Container(
-        margin: EdgeInsets.only(bottom: 30),
+        margin: const EdgeInsets.only(bottom: 30),
         child:FloatingActionButton(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           backgroundColor: Theme.of(context).colorScheme.primary,

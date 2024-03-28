@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:writles/Components/tabs/tabwithphoto.dart';
 import 'package:writles/Components/tabs/tabwithtext.dart';
@@ -43,19 +42,19 @@ class _Tabs extends State<Tabs> with SingleTickerProviderStateMixin {
             dividerColor: Colors.transparent,
             indicatorSize: TabBarIndicatorSize.tab,
             labelStyle: Theme.of(context).textTheme.labelMedium,
-            tabs: [
-              new Container(
-                child: new Tab(text: 'Эхийг зургаас оруулах'),
+            tabs: const [
+              SizedBox(
                 height: 40,
+                child: Tab(text: 'Зургаас оруулах'),
               ),
-              new Container(
-                child: new Tab(text: 'Эхийг хуулж оруулах'),
+              SizedBox(
                 height: 30,
+                child: Tab(text: 'Хуулж оруулах'),
               ),
             ],
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 10,
         ),
         Container(
@@ -67,15 +66,15 @@ class _Tabs extends State<Tabs> with SingleTickerProviderStateMixin {
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 1,
                 blurRadius: 1,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
-          height: MediaQuery.of(context).size.height/2.1,
+          height: MediaQuery.of(context).size.height/2.15,
 
           child: TabBarView(
             controller: tabController,
-            children: [tabwithphoto(title: "txt"), tabwithtext(title: "txt")],
+            children: const [tabwithphoto(title: "txt"), tabwithtext(title: "txt")],
           ),
         )
       ],

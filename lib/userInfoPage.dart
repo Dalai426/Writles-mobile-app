@@ -15,7 +15,7 @@ class _UserInfoPage extends State<UserInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height-56,
       child: Stack(
         children: [
@@ -37,10 +37,10 @@ class _UserInfoPage extends State<UserInfoPage> {
           ),
           SingleChildScrollView(
             child:Container(
-              padding: EdgeInsets.only(left: 15, right: 15),
+              padding: const EdgeInsets.only(left: 15, right: 15),
               child: Column(
                 children: <Widget>[
-                  SizedBox(
+                  const SizedBox(
                     height: 50,
                   ),
                   Row(
@@ -50,17 +50,17 @@ class _UserInfoPage extends State<UserInfoPage> {
                         width: 4,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Text("Нэр",
                           style: Theme.of(context)
                               .textTheme
-                              .labelLarge!
+                              .labelMedium!
                               .copyWith(
                                   color:
                                       Theme.of(context).colorScheme.primary)),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Expanded(
@@ -84,7 +84,7 @@ class _UserInfoPage extends State<UserInfoPage> {
                                   color:
                                       Theme.of(context).colorScheme.secondary),
                               borderRadius: BorderRadius.circular(10)),
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 10),
                           hintStyle: Theme.of(context)
                               .textTheme
@@ -96,7 +96,7 @@ class _UserInfoPage extends State<UserInfoPage> {
                       )),
                     ],
                   ),
-                  SizedBox(height: 15,),
+                  const SizedBox(height: 15,),
                   Row(
                     children: [
                       Container(
@@ -104,23 +104,23 @@ class _UserInfoPage extends State<UserInfoPage> {
                         width: 4,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Text("Хэрэглэгчийн түвшин",
                           style: Theme.of(context)
                               .textTheme
-                              .labelLarge!
+                              .labelMedium!
                               .copyWith(
                               color:
                               Theme.of(context).colorScheme.primary)),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     decoration: BoxDecoration(
                       color: Colors.white, borderRadius: BorderRadius.circular(10),
                       border: Border(
@@ -143,17 +143,17 @@ class _UserInfoPage extends State<UserInfoPage> {
 
                     )
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
-                  Container(
+                  SizedBox(
                       height: MediaQuery.of(context).size.height/1.1,
                       child: Row(
                     children: [
                       RotatedBox(
                           quarterTurns: -1,
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 25),
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
                             child: Slider(
                               inactiveColor:
                                   Theme.of(context).colorScheme.surface,
@@ -173,22 +173,22 @@ class _UserInfoPage extends State<UserInfoPage> {
                           child: Column(children: [
                         getBlocks(5, "Түвшин 5",
                             "Нэг дүгээр ангийн хүүхдэд зориулсан үелж унших түвшин"),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         getBlocks(4, "Түвшин 4",
                             "Нэг дүгээр ангийн хүүхдэд зориулсан үелж унших түвшин"),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         getBlocks(3, "Түвшин 3",
                             "Нэг дүгээр ангийн хүүхдэд зориулсан үелж унших түвшин"),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         getBlocks(2, "Түвшин 2",
                             "Нэг дүгээр ангийн хүүхдэд зориулсан үелж унших түвшин"),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         getBlocks(1, "Түвшин 1",
@@ -197,7 +197,7 @@ class _UserInfoPage extends State<UserInfoPage> {
                     ],
                   )
                   ),
-                  SizedBox(height: 30,)
+                  const SizedBox(height: 30,)
                 ],
               )))
         ],
@@ -216,6 +216,7 @@ class _UserInfoPage extends State<UserInfoPage> {
           child: Container(
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(10)),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -223,7 +224,7 @@ class _UserInfoPage extends State<UserInfoPage> {
               width: 4,
               color: Theme.of(context).colorScheme.secondary,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             Expanded(
@@ -232,14 +233,14 @@ class _UserInfoPage extends State<UserInfoPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "${lab}",
+                  lab,
                   style: Theme.of(context)
                       .textTheme
                       .labelMedium!
                       .copyWith(color: Theme.of(context).colorScheme.primary),
                 ),
                 Text(
-                  "${info}",
+                  info,
                   style: Theme.of(context)
                       .textTheme
                       .titleSmall!
@@ -249,7 +250,6 @@ class _UserInfoPage extends State<UserInfoPage> {
             ))
           ],
         ),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       )),
       AnimatedContainer(
         width: (context.read<GeneralProvider>().userLevel.toInt()) == no ? 0 : 15,

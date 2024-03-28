@@ -31,7 +31,7 @@ class _FromPhotoPage extends State<FromPhotoPage> {
     var file = await imageHelper.pickImage(imageQuality: 100);
 
     if (file != null) {
-      String imagePathLowerCase =await file.path.toLowerCase();
+      String imagePathLowerCase = file.path.toLowerCase();
 
       if (imagePathLowerCase.contains('heic')) {
         String? pngPath = await HeifConverter.convert(file.path, format: 'png');
@@ -59,18 +59,17 @@ class _FromPhotoPage extends State<FromPhotoPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(left: 10, right: 10, bottom: 30),
+        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 30),
         child: Column(
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 1,),
                 Text(
-                  "Хэрэглэгчийн цээж бичгийн түвшин :",
+                  "Цээж бичгийн түвшин :",
                   style: Theme.of(context)
                       .textTheme
                       .labelMedium!
@@ -80,13 +79,12 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                   "Түвшин ${context.read<GeneralProvider>().userLevel.toInt()}",
                   style: Theme.of(context)
                       .textTheme
-                      .labelLarge!
+                      .labelMedium!
                       .copyWith(color: Theme.of(context).colorScheme.primary),
                 ),
-                SizedBox(width: 1,),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Slider(
@@ -102,13 +100,13 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                 });
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             InkWell(
               onTap: _pickImage,
                 child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               decoration: BoxDecoration(
                   border: Border(
                       bottom: BorderSide(
@@ -122,6 +120,12 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                   Row(
                     children: [
                       Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Theme.of(context).colorScheme.secondary),
+                        width: 25,
+                        height: 25,
+                        alignment: Alignment.center,
                         child: Text(
                           "1",
                           style: Theme.of(context)
@@ -129,14 +133,8 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                               .labelSmall!
                               .copyWith(color: Colors.white),
                         ),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Theme.of(context).colorScheme.secondary),
-                        width: 25,
-                        height: 25,
-                        alignment: Alignment.center,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 15,
                       ),
                       Container(
@@ -144,7 +142,7 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                         width: 3,
                         color: Theme.of(context).colorScheme.secondary,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 30,
                       ),
                       Text(
@@ -157,14 +155,14 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                       ),
                     ],
                   ),
-                  Image(
+                  const Image(
                     image: AssetImage("img/ig.png"),
                     width: 30,
                   )
                 ],
               ),
             )),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             Container(
@@ -178,7 +176,7 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 1,
                     blurRadius: 1,
-                    offset: Offset(0, 3), // changes position of shadow
+                    offset: const Offset(0, 3), // changes position of shadow
                   ),
                 ],
               ),
@@ -193,7 +191,7 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                 LoadingAnimationWidget.inkDrop(
                   size: 100, color: Theme.of(context).colorScheme.secondary,
                 ),
-              ):Padding(padding: EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 15),
+              ):Padding(padding: const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 15),
               child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -204,27 +202,27 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                             width: 4,
                             color: Theme.of(context).colorScheme.secondary,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Text("Гарчиг",
                               style: Theme.of(context)
                                   .textTheme
-                                  .labelMedium!
+                                  .bodyMedium!
                                   .copyWith(
                                   color: Theme.of(context)
                                       .colorScheme
                                       .secondary))
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextField(
                         controller: context.read<GeneralProvider>().garchig,
                         style: Theme.of(context)
                             .textTheme
-                            .labelMedium!
+                            .bodyMedium!
                             .copyWith(
                             color: Theme.of(context).colorScheme.primary),
                         decoration: InputDecoration(
@@ -234,19 +232,19 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 10),
                           hintStyle: Theme.of(context)
                               .textTheme
-                              .labelMedium!
+                              .bodyMedium!
                               .copyWith(
                               color:
                               Theme.of(context).colorScheme.surface),
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           hintText: 'Цээж бичгийн гарчгийг оруулна',
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(
@@ -256,20 +254,20 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                             width: 4,
                             color: Theme.of(context).colorScheme.secondary,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Text("Эх",
                               style: Theme.of(context)
                                   .textTheme
-                                  .labelMedium!
+                                  .bodyMedium!
                                   .copyWith(
                                   color: Theme.of(context)
                                       .colorScheme
                                       .secondary))
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextField(
@@ -280,7 +278,7 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                         keyboardType: TextInputType.multiline,
                         style: Theme.of(context)
                             .textTheme
-                            .labelMedium!
+                            .bodyMedium!
                             .copyWith(
                             color: Theme.of(context).colorScheme.primary),
                         decoration: InputDecoration(
@@ -290,22 +288,22 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
                           ),
-                          contentPadding: EdgeInsets.symmetric(
+                          contentPadding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 10),
                           hintStyle: Theme.of(context)
                               .textTheme
-                              .labelMedium!
+                              .bodyMedium!
                               .copyWith(
                               color:
                               Theme.of(context).colorScheme.surface),
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           hintText: 'Цээж бичгийн эхийг энд оруулна',
                         ),
                       ),
                     ],
                   )))
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             InkWell(
@@ -319,7 +317,7 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                   if(str!=null){
                     context.read<GeneralProvider>().eh.text=str;
                   }
-                  print("ho");
+
                   setState(() {
                     ontext=2;
                     _image=null;
@@ -328,7 +326,7 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                 }
               },
                 child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               decoration: BoxDecoration(
                   border: Border(
                       bottom: BorderSide(
@@ -342,6 +340,12 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                   Row(
                     children: [
                       Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Theme.of(context).colorScheme.primary),
+                        width: 25,
+                        height: 25,
+                        alignment: Alignment.center,
                         child: Text(
                           "2",
                           style: Theme.of(context)
@@ -349,14 +353,8 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                               .labelSmall!
                               .copyWith(color: Colors.white),
                         ),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Theme.of(context).colorScheme.primary),
-                        width: 25,
-                        height: 25,
-                        alignment: Alignment.center,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 15,
                       ),
                       Container(
@@ -364,7 +362,7 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                         width: 3,
                         color: Theme.of(context).colorScheme.primary,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 15,
                       ),
                       Text(
@@ -384,25 +382,25 @@ class _FromPhotoPage extends State<FromPhotoPage> {
                 ],
               ),
             )),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             InkWell(
                 child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
               decoration: BoxDecoration(boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.1),
                   spreadRadius: 1,
                   blurRadius: 1,
-                  offset: Offset(0, 3), // changes position of shadow
+                  offset: const Offset(0, 3), // changes position of shadow
                 ),
               ], color: Colors.white, borderRadius: BorderRadius.circular(15)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Notfication ашиглан дараа тоглуулах",
+                    "Цээж бичиг сануулах",
                     style: Theme.of(context)
                         .textTheme
                         .labelMedium!

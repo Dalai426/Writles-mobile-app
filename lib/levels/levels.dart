@@ -38,18 +38,18 @@ class Levels{
 
   void wavToTitle(String title) async{
 
-    String NUM_API = dotenv.get("NLP_NUM_API", fallback: "");
+    String numApi = dotenv.get("NLP_NUM_API", fallback: "");
 
-    String dir = (await getApplicationDocumentsDirectory()).path+"/wavs";
-    if(!await Directory(dir).existsSync()) {
+    String dir = "${(await getApplicationDocumentsDirectory()).path}/wavs";
+    if(! Directory(dir).existsSync()) {
       await Directory(dir).create(recursive: true);
     }
 
     final Map<String, String> queryParams = {
       'voice': '2',
-      'text': '${title}',
+      'text': title,
     };
-    var uri = await Uri.http(NUM_API, 'nlp-web-demo/tts',queryParams);
+    var uri = Uri.http(numApi, 'nlp-web-demo/tts',queryParams);
     http.Response response=await http.get(uri);
     if (response.statusCode == 200) {
       wav_title = File('${dir}/garchig_wav.wav');
