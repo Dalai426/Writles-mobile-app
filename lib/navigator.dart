@@ -15,7 +15,7 @@ import 'package:writles/utils/checkTextLen.dart';
 class NavigatorPage extends StatelessWidget {
 
   static const List<Widget> _widgetOptions = <Widget>[
-    MyHomePage(title: "Home"),
+    MyHomePage(),
     FromPhotoPage(title: "photo"),
     Text("dalai"),
     FromTextPage(title: "text"),

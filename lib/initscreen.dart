@@ -29,46 +29,46 @@ class _InitPage extends State<InitPage> with SingleTickerProviderStateMixin {
   login() async {
 
 
-    // final token = await firebaseMessaging.getToken();
-    // var jsonData = {
-    //   'username': username.value.text,
-    //   'password': password.value.text,
-    //   'device_token':token
-    // };
-    //
-    // var body = json.encode(jsonData);
-    // var uri = Uri.http(apiflask, 'user/login');
-    //
-    //
-    // http.Response response = await http.post(uri,
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body:body
-    // );
-    // Map<String, dynamic> responseBodyJson = json.decode(response.body);
-    //
-    // if (response.statusCode == 200) {
-    //   String access_token=responseBodyJson["access_token"];
-    //   SecureStorage().writeSecureData("token", access_token);
-    //
-    //   if(responseBodyJson["status"]=="success"){
+    final token = await firebaseMessaging.getToken();
+    var jsonData = {
+      'username': username.value.text,
+      'password': password.value.text,
+      'device_token':token
+    };
+
+    var body = json.encode(jsonData);
+    var uri = Uri.http(apiflask, 'user/login');
+
+
+    http.Response response = await http.post(uri,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body:body
+    );
+    Map<String, dynamic> responseBodyJson = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      String access_token=responseBodyJson["access_token"];
+      SecureStorage().writeSecureData("token", access_token);
+
+      if(responseBodyJson["status"]=="success"){
         Navigator.pushNamed(context,"/home");
-    //   }else{
-    //     Navigator.of(context).push(MaterialPageRoute(builder:(context)=>ChooseUsers(users:responseBodyJson["users"])));
-    //   }
-    // } else {
-    //   CherryToast.error(
-    //     title: Text(
-    //       responseBodyJson["detail"],
-    //       style: Theme.of(context)
-    //           .textTheme
-    //           .labelSmall!
-    //           .copyWith(color: Theme.of(context).colorScheme.surface),
-    //     ),
-    //   ).show(context);
-    //
-    // }
+      }else{
+        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>ChooseUsers(users:responseBodyJson["users"])));
+      }
+    } else {
+      CherryToast.error(
+        title: Text(
+          responseBodyJson["detail"],
+          style: Theme.of(context)
+              .textTheme
+              .labelSmall!
+              .copyWith(color: Theme.of(context).colorScheme.surface),
+        ),
+      ).show(context);
+
+    }
   }
 
   @override

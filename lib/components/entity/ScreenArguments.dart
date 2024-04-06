@@ -5,3 +5,10 @@ class ScreenArguments {
 
   ScreenArguments(this.title, this.text, this.level);
 }
+
+class ScreenArgumentsFromNot{
+  final String title;
+  final String text;
+
+  ScreenArgumentsFromNot(this.title, this.text);
+}

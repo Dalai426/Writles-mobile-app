@@ -9,6 +9,8 @@ import 'package:writles/providers/generalProvider.dart';
 import 'package:writles/utils/image_helper.dart';
 import 'package:writles/utils/ocr.dart';
 
+import 'NotificationScreen.dart';
+
 final imageHelper = ImageHelper();
 
 class FromPhotoPage extends StatefulWidget {
@@ -386,6 +388,11 @@ class _FromPhotoPage extends State<FromPhotoPage> {
               height: 15,
             ),
             InkWell(
+              onTap: () async {
+                Navigator.of(context).push(MaterialPageRoute(builder:(context)=>NotificatierScreen(garchig:context.read<GeneralProvider>().garchig.text,
+                    eh:context.read<GeneralProvider>().eh.text
+                )));
+              },
                 child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
               decoration: BoxDecoration(boxShadow: [

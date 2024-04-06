@@ -6,13 +6,20 @@ class PushNotifications{
   static Future init() async {
     await firebaseMessaging.requestPermission(
       alert: true,
-      announcement: false,
+      announcement: true,
       badge: true,
       carPlay: false,
-      criticalAlert: false,
+      criticalAlert: true,
       provisional: false,
       sound: true
     );
+
+    firebaseMessaging..setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
 
     final token = await firebaseMessaging.getToken();
     print(token);

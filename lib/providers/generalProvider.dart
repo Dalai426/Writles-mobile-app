@@ -35,6 +35,12 @@ class GeneralProvider with ChangeNotifier, DiagnosticableTreeMixin {
     eh.clear();
   }
 
+
+  void changeNavigator(int index, context) async {
+      selectedIndex = index;
+      notifyListeners();
+  }
+
   void changeNavigatorIndex(int index, context) async {
     if (index != 2) {
       selectedIndex = index;

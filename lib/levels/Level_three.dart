@@ -76,7 +76,7 @@ class LevelThree extends Levels {
       streamSubscription = p1.onPlayerComplete.listen((event) async {
         int second = 1000;
         if (i == length) {
-          second = 6000;
+          second = 4000;
         }
         if (i < length) {
           delayTimer = Timer(Duration(milliseconds: second), () async {
@@ -87,12 +87,12 @@ class LevelThree extends Levels {
           if (count < 2) {
             i=1;
             count++;
-            delayTimer=Timer(const Duration(milliseconds: 6000),() async {
+            delayTimer=Timer(const Duration(milliseconds: 4000),() async {
                 await p1.play(DeviceFileSource(listPerReading!.elementAt(0)!.path));
             });
 
           } else {
-            delayTimer = Timer(const Duration(milliseconds: 10000), () async {
+            delayTimer = Timer(const Duration(milliseconds: 6000), () async {
               await function();
             });
           }
@@ -100,9 +100,8 @@ class LevelThree extends Levels {
       });
 
       if (0 < length) {
-        delayTimer = Timer(const Duration(milliseconds: 1000), () async {
-            await p1.play(DeviceFileSource(listPerReading!.elementAt(0)!.path));
-        });
+
+        await p1.play(DeviceFileSource(listPerReading!.elementAt(0)!.path));
 
         return streamSubscription;
       }

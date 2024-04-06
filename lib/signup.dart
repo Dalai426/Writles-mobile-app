@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:convert';
-
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:writles/providers/generalProvider.dart';
-import 'package:writles/utils/OtpUtils.dart';
-
 import 'components/OtpDialog.dart';
 import 'components/PointedLine.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
+
   @override
   State<SignupPage> createState() => _SignupPage();
 }
@@ -128,6 +125,7 @@ class _SignupPage extends State<SignupPage>{
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(body: Container(
       alignment: Alignment.bottomCenter,
       padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),

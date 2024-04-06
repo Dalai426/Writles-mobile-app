@@ -104,14 +104,14 @@ class LevelTwo extends Levels{
       streamSubscription=p1.onPlayerComplete.listen((event){
 
         if(ex){
-          delayTimer=Timer(const Duration(milliseconds: 8000), (){
+          delayTimer=Timer(const Duration(milliseconds: 6000), (){
             function();
           });
         }else{
           if (semis!.elementAtOrNull(i) != null) {
             int second=1000;
             if(i==0){
-              second=4000;
+              second=3000;
             }
             delayTimer=Timer(Duration(milliseconds: second),(){
                 p1.play(DeviceFileSource(semis!.elementAt(i)!.path));
@@ -122,12 +122,12 @@ class LevelTwo extends Levels{
               count++;
             }
             if(count<2){
-              delayTimer=Timer(const Duration(milliseconds: 4000),() {
+              delayTimer=Timer(const Duration(milliseconds: 3000),() {
                   count++;
                   p1.play(DeviceFileSource(ret!.path));
               });
             }else{
-              delayTimer=Timer(const Duration(milliseconds: 4000),(){
+              delayTimer=Timer(const Duration(milliseconds: 3000),(){
                   ex = true;
                   p1.play(DeviceFileSource(ret!.path));
               });
@@ -137,9 +137,9 @@ class LevelTwo extends Levels{
       });
 
       if (ret != null) {
-        delayTimer=Timer(const Duration(milliseconds: 1000),() async {
-            await p1.play(DeviceFileSource(ret!.path));
-        });
+
+        await p1.play(DeviceFileSource(ret.path));
+
         return streamSubscription;
       }
 

@@ -83,7 +83,7 @@ class LevelFour extends Levels {
 
         int second = 1000;
         if (i == length) {
-          second = level==4?7000:5000;
+          second = level==4?6000:4000;
         }
         if (i < length) {
           delayTimer = Timer(Duration(milliseconds: second), () {
@@ -94,12 +94,12 @@ class LevelFour extends Levels {
           if (count < 2) {
             i=1;
             count++;
-            delayTimer=Timer(Duration(milliseconds: level==4?7000:5000),()
+            delayTimer=Timer(Duration(milliseconds: level==4?6000:4000),()
             {
                 p1.play(DeviceFileSource(list_per_reading!.elementAt(0)!.path));
             });
           }else{
-            delayTimer = Timer(Duration(milliseconds: level==4?12000:10000), () {
+            delayTimer = Timer(Duration(milliseconds: level==4?11000:9000), () {
               function();
             });
           }

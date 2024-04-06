@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:writles/NotificationScreen.dart';
 import 'package:writles/providers/generalProvider.dart';
 
 class FromTextPage extends StatefulWidget {
@@ -231,6 +232,11 @@ class _FromTextPage extends State<FromTextPage> {
                     height: 15,
                   ),
                   InkWell(
+                    onTap: () async {
+                      Navigator.of(context).push(MaterialPageRoute(builder:(context)=>NotificatierScreen(garchig:context.read<GeneralProvider>().garchig.text,
+                          eh:context.read<GeneralProvider>().eh.text
+                      )));
+                    },
                       child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                     decoration: BoxDecoration(
