@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:writles/NotificationScreen.dart';
 import 'package:writles/providers/generalProvider.dart';
+import 'package:writles/utils/checkInternet.dart';
 
 class FromTextPage extends StatefulWidget {
   const FromTextPage({super.key, required this.title});
@@ -233,6 +234,9 @@ class _FromTextPage extends State<FromTextPage> {
                   ),
                   InkWell(
                     onTap: () async {
+                      if(! await connectiveCheck(context)){
+                        return;
+                      }
                       Navigator.of(context).push(MaterialPageRoute(builder:(context)=>NotificatierScreen(garchig:context.read<GeneralProvider>().garchig.text,
                           eh:context.read<GeneralProvider>().eh.text
                       )));

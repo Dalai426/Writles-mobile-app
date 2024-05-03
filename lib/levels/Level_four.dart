@@ -19,6 +19,12 @@ class LevelFour extends Levels {
 
   void init(String text, int level, {String? title}) async {
     List<List<String>> strings = spilitSetences(text.trim());
+
+
+    if(title!=null) {
+      strings.insert(0,[title]);
+      hasTitle=true;
+    }
     count_text = strings.length;
 
     String apiflask = dotenv.get("API_FLASK", fallback: "");
@@ -73,8 +79,9 @@ class LevelFour extends Levels {
       }
 
       int length = list_per_reading.length;
-      int i = 1;
+      int i = hasTitle == true && reading_wav_index == 1 ? 0 : 1;
       int count = 0;
+      bool bell=false;
 
       streamSubscription = p1.onPlayerComplete.listen((event){
         p1.stop();
@@ -99,15 +106,27 @@ class LevelFour extends Levels {
                 p1.play(DeviceFileSource(list_per_reading!.elementAt(0)!.path));
             });
           }else{
-            delayTimer = Timer(Duration(milliseconds: level==4?11000:9000), () {
-              function();
-            });
+
+            if(bell==false){
+              bell=true;
+              delayTimer = Timer( Duration(milliseconds: level==4?7000:6000), () async {
+                await p1.play(AssetSource("audios/bell.wav"));
+              });
+            }else {
+              delayTimer = Timer(const Duration(milliseconds: 2000), () async {
+                await function();
+              });
+            }
           }
         }
       });
 
       if (0 < length) {
-        await p1.play(DeviceFileSource(list_per_reading.elementAt(0)!.path));
+        if(i==0) {
+          await p1.play(AssetSource("audios/garchig.wav"));
+        }else {
+          await p1.play(DeviceFileSource(list_per_reading.elementAt(0)!.path));
+        }
         return streamSubscription;
       }
     } catch (e) {

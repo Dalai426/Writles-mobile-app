@@ -11,19 +11,45 @@ class GeneralProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   int selectedIndex = 0;
   double userLevel=1;
+  bool isDeviceConnected=false;
 
   TextEditingController garchig=TextEditingController();
   TextEditingController eh=TextEditingController();
 
+  TextEditingController username=TextEditingController();
+  TextEditingController useremail=TextEditingController();
+
   bool verified_otp=false;
   int verify_start=180;
   String? otp;
+  String? userId;
+
+  void setDeviceConnected(bool val) async {
+    isDeviceConnected=val;
+    notifyListeners();
+  }
+
+  void setUser(String id, String? name, String? gmail){
+    userId=id;
+    if(name!=null){
+      username.text=name;
+    }
+    if(gmail!=null){
+      useremail.text=gmail;
+    }
+    notifyListeners();
+  }
 
   void dec_sec(){
     verify_start--;
     notifyListeners();
   }
 
+
+  void setVerifyOtp(bool value){
+    verified_otp=value;
+    notifyListeners();
+  }
 
 
   void changeLevel(double level){

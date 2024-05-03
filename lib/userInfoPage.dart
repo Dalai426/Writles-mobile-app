@@ -1,6 +1,12 @@
+import 'dart:convert';
+import 'package:cherry_toast/cherry_toast.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:writles/providers/generalProvider.dart';
+import 'package:writles/utils/SecureStorage.dart';
+import 'package:writles/utils/checkInternet.dart';
 
 class UserInfoPage extends StatefulWidget {
   const UserInfoPage({super.key, required this.title});
@@ -13,6 +19,48 @@ class UserInfoPage extends StatefulWidget {
 
 class _UserInfoPage extends State<UserInfoPage> {
 
+  _update() async {
+    if(! await connectiveCheck(context)){
+      return;
+    }
+    if (context.read<GeneralProvider>().userId == null) {
+      return;
+    }
+    String jwt = await SecureStorage().readSecureData("token");
+    String apiflask = dotenv.get("API_FLASK_CUSTOMER", fallback: "");
+    var uri = Uri.http(apiflask, 'user/update');
+
+    var jsonData ={
+      "id": context.read<GeneralProvider>().userId,
+      "name": context.read<GeneralProvider>().username.value.text,
+      "gmail": context.read<GeneralProvider>().useremail.value.text
+    };
+    var body = json.encode(jsonData);
+    http.Response response = await http.post(uri, headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${jwt}'
+    }, body: body);
+
+    Map<String, dynamic> responseBodyJson = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      String access_token = responseBodyJson["accesstoken"];
+      SecureStorage().writeSecureData("token", access_token);
+      CherryToast.success(
+        title: Text(
+          "Амжилттай !!!",
+          style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Theme.of(context).colorScheme.surface),
+        ),
+      ).show(context);
+    } else {
+      CherryToast.error(
+        title: Text(
+          responseBodyJson["detail"],
+          style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Theme.of(context).colorScheme.surface),
+        ),
+      ).show(context);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -65,6 +113,7 @@ class _UserInfoPage extends State<UserInfoPage> {
                       ),
                       Expanded(
                           child: TextField(
+                            controller: context.watch<GeneralProvider>().username,
                         keyboardType: TextInputType.name,
                         style: Theme.of(context)
                             .textTheme
@@ -95,6 +144,80 @@ class _UserInfoPage extends State<UserInfoPage> {
                         ),
                       )),
                     ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        height: 30,
+                        width: 4,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text("И-мэйл",
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .copyWith(
+                              color:
+                              Theme.of(context).colorScheme.primary)),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: TextField(
+                            controller: context.watch<GeneralProvider>().useremail,
+                            keyboardType: TextInputType.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                color: Theme.of(context).colorScheme.primary),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color:
+                                      Theme.of(context).colorScheme.secondary),
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color:
+                                      Theme.of(context).colorScheme.secondary),
+                                  borderRadius: BorderRadius.circular(10)),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              hintStyle: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(
+                                  color: Theme.of(context).colorScheme.surface),
+                              hintText: 'И-мэйл',
+                            ),
+                          )),
+                    ],
+                  ),
+                  SizedBox(height: 10,),
+                  Container(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                            backgroundColor: MaterialStateProperty.all<Color>(Theme.of(context).colorScheme.primary),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)
+                                )
+                            )
+                        ),
+                        child: Text("Шинэчлэх", style: TextStyle(fontSize: 15),),
+                        onPressed:_update,
+                      )
                   ),
                   const SizedBox(height: 15,),
                   Row(

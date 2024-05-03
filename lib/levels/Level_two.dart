@@ -25,6 +25,11 @@ class LevelTwo extends Levels{
     String flaskapikey = dotenv.get("FLASK_API_KEY_VALUE", fallback: "");
     final Map<String, String> header = {"X-API-KEY": flaskapikey};
 
+    if(title!=null) {
+      strings.insert(0,title);
+      hasTitle=true;
+    }
+
     count_text = strings.length;
 
     String dir = "${(await getApplicationDocumentsDirectory()).path}/wavs";
@@ -100,13 +105,21 @@ class LevelTwo extends Levels{
       int i = 0;
       int count=1;
       bool ex=false;
+      bool bell=false;
 
       streamSubscription=p1.onPlayerComplete.listen((event){
 
         if(ex){
-          delayTimer=Timer(const Duration(milliseconds: 6000), (){
-            function();
-          });
+          if(bell==false){
+            bell=true;
+            delayTimer = Timer(const Duration(milliseconds: 5000), () async {
+              await p1.play(AssetSource("audios/bell.wav"));
+            });
+          }else {
+            delayTimer = Timer(const Duration(milliseconds: 2000), () async {
+              await function();
+            });
+          }
         }else{
           if (semis!.elementAtOrNull(i) != null) {
             int second=1000;
@@ -122,12 +135,12 @@ class LevelTwo extends Levels{
               count++;
             }
             if(count<2){
-              delayTimer=Timer(const Duration(milliseconds: 3000),() {
+              delayTimer=Timer(const Duration(milliseconds: 4000),() {
                   count++;
                   p1.play(DeviceFileSource(ret!.path));
               });
             }else{
-              delayTimer=Timer(const Duration(milliseconds: 3000),(){
+              delayTimer=Timer(const Duration(milliseconds: 4000),(){
                   ex = true;
                   p1.play(DeviceFileSource(ret!.path));
               });
@@ -136,12 +149,15 @@ class LevelTwo extends Levels{
         }
       });
 
-      if (ret != null) {
 
-        await p1.play(DeviceFileSource(ret.path));
+        if(hasTitle == true && reading_wav_index == 1){
+          await p1.play(AssetSource("audios/garchig.wav"));
+        }else {
+          await p1.play(DeviceFileSource(ret!.path));
+        }
 
         return streamSubscription;
-      }
+
 
 
     }catch(e){

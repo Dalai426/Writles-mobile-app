@@ -10,13 +10,19 @@ import 'dart:io';
 import 'package:logger/logger.dart';
 
 class LevelThree extends Levels {
-  List<List<File?>>? wavs;
+  List<List<String?>>? wavs;
   var logger = Logger();
 
   LevelThree();
 
   void init(String text, int level, {String? title}) async {
     List<List<String>> strings = spilitSetences(text.trim());
+
+    if(title!=null) {
+      strings.insert(0,[title]);
+      hasTitle=true;
+    }
+
     count_text = strings.length;
 
     String apiflask = dotenv.get("API_FLASK", fallback: "");
@@ -28,7 +34,6 @@ class LevelThree extends Levels {
     if (!Directory(dir).existsSync()) {
       await Directory(dir).create(recursive: true);
     }
-
 
     wavs = await Future.wait(strings.asMap().entries.map((subList) async {
       int index = subList.key;
@@ -44,19 +49,18 @@ class LevelThree extends Levels {
         if (response.statusCode == 200) {
           File file = File('$dir/${index}_${el.key}_wav.wav');
           file.writeAsBytes(response.bodyBytes);
-          return file;
+          return file.path;
         } else {
           return null;
         }
       }).toList());
     }).toList());
 
-
   }
 
   Future<StreamSubscription?> nextWav(BuildContext context, Function function) async {
 
-    List<File?>? listPerReading;
+    List<String?>? listPerReading;
     StreamSubscription? streamSubscription;
 
     try {
@@ -70,8 +74,11 @@ class LevelThree extends Levels {
 
 
       int length = listPerReading.length;
-      int i = 1;
+
+
+      int i = hasTitle == true && reading_wav_index == 1 ? 0 : 1;
       int count = 0;
+      bool bell=false;
 
       streamSubscription = p1.onPlayerComplete.listen((event) async {
         int second = 1000;
@@ -80,7 +87,7 @@ class LevelThree extends Levels {
         }
         if (i < length) {
           delayTimer = Timer(Duration(milliseconds: second), () async {
-              await p1.play(DeviceFileSource(listPerReading!.elementAt(i)!.path));
+              await p1.play(DeviceFileSource(listPerReading!.elementAt(i)!));
               i++;
           });
         } else {
@@ -88,21 +95,29 @@ class LevelThree extends Levels {
             i=1;
             count++;
             delayTimer=Timer(const Duration(milliseconds: 4000),() async {
-                await p1.play(DeviceFileSource(listPerReading!.elementAt(0)!.path));
+                await p1.play(DeviceFileSource(listPerReading!.elementAt(0)!));
             });
 
           } else {
-            delayTimer = Timer(const Duration(milliseconds: 6000), () async {
-              await function();
-            });
+            if(bell==false){
+              bell=true;
+              delayTimer = Timer(const Duration(milliseconds: 5000), () async {
+                  await p1.play(AssetSource("audios/bell.wav"));
+              });
+            }else {
+              delayTimer = Timer(const Duration(milliseconds: 2000), () async {
+                await function();
+              });
+            }
           }
         }
       });
-
       if (0 < length) {
-
-        await p1.play(DeviceFileSource(listPerReading!.elementAt(0)!.path));
-
+        if(i==0) {
+          await p1.play(AssetSource("audios/garchig.wav"));
+        }else{
+          await p1.play(DeviceFileSource(listPerReading.elementAt(0)!));
+        }
         return streamSubscription;
       }
     } catch (e) {
@@ -120,6 +135,9 @@ class LevelThree extends Levels {
     }
     return streamSubscription;
   }
+
+
+
 
   void prevWav() async {
     cancelDelay();

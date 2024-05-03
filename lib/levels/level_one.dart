@@ -24,6 +24,11 @@ class LevelOne extends Levels {
     String flaskapikey = dotenv.get("FLASK_API_KEY_VALUE", fallback: "");
     final Map<String, String> header = {"X-API-KEY": flaskapikey};
 
+    if(title!=null) {
+      strings.insert(0,title);
+      hasTitle=true;
+    }
+
     count_text = strings.length;
 
     String dir = "${(await getApplicationDocumentsDirectory()).path}/wavs";
@@ -31,7 +36,6 @@ class LevelOne extends Levels {
     if (!Directory(dir).existsSync()) {
       await Directory(dir).create(recursive: true);
     }
-
     var dalai = spilitWithVye(strings).entries.map((e) async {
       final List<Future<File?>> downloadFutures =
       e.value.asMap().entries.map((w) async {
@@ -81,7 +85,6 @@ class LevelOne extends Levels {
     List<File?>? semis;
     StreamSubscription? streamSubscription;
 
-
     try {
       if (reading_wav_index >= count_text) {
         reading_wav_index = count_text;
@@ -96,34 +99,44 @@ class LevelOne extends Levels {
       int i = 0;
       int count = 1;
       bool ex = false;
+      bool bell=false;
 
       streamSubscription = p1.onPlayerComplete.listen((event){
+        delayTimer = Timer(const Duration(milliseconds: 200), ()  {
+        });
         p1.stop();
         if (ex) {
-          delayTimer = Timer(const Duration(milliseconds: 6000), (){
-            function();
-          });
+          if(bell==false){
+            bell=true;
+            delayTimer = Timer(const Duration(milliseconds: 6000), ()  {
+               p1.play(AssetSource("audios/bell.wav"));
+            });
+          }else {
+            delayTimer = Timer(const Duration(milliseconds: 2000), () {
+               function();
+            });
+          }
         } else {
           if (semis != null && semis.elementAtOrNull(i) != null) {
             int second = 1000;
             if (i == 0) {
               second = 3000;
             }
-            delayTimer = Timer(Duration(milliseconds: second), () async {
-                await p1.play(DeviceFileSource(semis!.elementAt(i)!.path));
-                i++;
+            delayTimer = Timer(Duration(milliseconds: second), ()  {
+              p1.play(DeviceFileSource(semis!.elementAt(i)!.path));
+              i++;
             });
           } else {
             count++;
             if (count < 2) {
               i = 1;
-              delayTimer = Timer(const Duration(milliseconds: 3000), () async {
-                  await p1.play(DeviceFileSource(semis!.elementAt(0)!.path));
+              delayTimer = Timer(const Duration(milliseconds: 4000), ()  {
+                   p1.play(DeviceFileSource(semis!.elementAt(0)!.path));
               });
             } else {
-              delayTimer = Timer(const Duration(milliseconds: 3000), () async {
+              delayTimer = Timer(const Duration(milliseconds: 4000), ()  {
                   ex = true;
-                  await p1.play(DeviceFileSource(ret!.path));
+                  p1.play(DeviceFileSource(ret!.path));
               });
             }
           }
@@ -131,7 +144,11 @@ class LevelOne extends Levels {
       });
 
 
-      await p1.play(DeviceFileSource(ret!.path));
+      if(hasTitle == true && reading_wav_index == 1){
+        p1.play(AssetSource("audios/garchig.wav"));
+      }else {
+        p1.play(DeviceFileSource(ret!.path));
+      }
       return streamSubscription;
 
     } catch (e) {

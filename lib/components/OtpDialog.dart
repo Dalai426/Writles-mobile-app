@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cherry_toast/cherry_toast.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,8 @@ import 'package:writles/utils/OtpUtils.dart';
 
 import '../providers/generalProvider.dart';
 import 'package:http/http.dart' as http;
+
+import '../utils/checkInternet.dart';
 
 class OtpDialog extends StatefulWidget {
 
@@ -75,7 +78,7 @@ class _OtpDialog extends State<OtpDialog> {
     if(context.read<GeneralProvider>().otp!=null){
       final decrypted=decryptOTP(context.read<GeneralProvider>().otp!);
       if(code.compareTo(decrypted)==0){
-        context.read<GeneralProvider>().verified_otp=true;
+        context.read<GeneralProvider>().setVerifyOtp(true);
         if(timer!=null) {
           timer!.cancel();
         }
@@ -113,15 +116,20 @@ class _OtpDialog extends State<OtpDialog> {
       'gmail': widget.gmail!
     };
     var uri = Uri.http(apiflask, 'user/otp',queryParams);
-    http.Response response=await http.post(uri);
-    print(response.toString());
-    if (response.statusCode == 200) {
-      Map<String, dynamic> responseBodyJson = json.decode(response.body);
-      context.read<GeneralProvider>().otp=responseBodyJson["otp"];
-      startTimer();
-    }else{
-      startTimer();
-      context.read<GeneralProvider>().verify_start=0;
+    try{
+      http.Response response=await http.post(uri);
+      print(response.toString());
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseBodyJson = json.decode(response.body);
+        context.read<GeneralProvider>().otp=responseBodyJson["otp"];
+        startTimer();
+      }else{
+        startTimer();
+        context.read<GeneralProvider>().verify_start=0;
+      }
+    }on SocketException catch (_){
+      await connectiveCheck(context);
+    }catch (e) {
     }
 
   }

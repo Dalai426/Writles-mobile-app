@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:writles/providers/generalProvider.dart';
+import 'package:writles/utils/checkInternet.dart';
 import 'components/OtpDialog.dart';
 import 'components/PointedLine.dart';
 
@@ -42,7 +43,9 @@ class _SignupPage extends State<SignupPage>{
   }
 
   signUp() async {
-
+      if(! await connectiveCheck(context)){
+        return;
+      }
       if(password.value.text.compareTo(repassword.value.text)!=0 || password.value.text.isEmpty || repassword.value.text.isEmpty){
         CherryToast.error(
           title: Text(

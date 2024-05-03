@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:logger/logger.dart';
@@ -28,8 +29,11 @@ class _ReaderPage extends State<ReaderPage>
   StreamSubscription? player_info;
   double progress = 0.0;
   bool fetching = true;
-
+  bool started=false;
   Logger logger =  Logger();
+  AudioPlayer player=AudioPlayer();
+  StreamSubscription? introsub;
+  Timer? pretimer;
 
   @override
   void initState() {
@@ -69,12 +73,33 @@ class _ReaderPage extends State<ReaderPage>
 
 
 
+  void _onPlayPre() async {
+    if (player.state == PlayerState.playing || pretimer!=null) {
+      return;
+    }
+    await introsub?.cancel();
+
+    player.stop();
+
+      introsub=player.onPlayerComplete.listen((event) {
+        player.stop();
+        pretimer=Timer(const Duration(milliseconds: 2000), (){
+          setState(() {
+            started=true;
+          });
+        });
+      });
+
+    player.play(AssetSource("audios/intro.wav"));
+
+  }
+
   void _onPlay() async {
     await tts.cancelDelay();
     await tts.p1.stop();
     if(tts.reading_wav_index<tts.count_text){
       if(player_info!=null){
-        await player_info!.cancel();
+        await player_info?.cancel();
       }
       player_info = await tts.nextWav(context, _onPlay);
       progress = tts.reading_wav_index.toDouble() / count_text.toDouble();
@@ -84,7 +109,7 @@ class _ReaderPage extends State<ReaderPage>
 
   void _prev() async {
     if(player_info!=null){
-      player_info!.cancel();
+      await player_info?.cancel();
     }
     tts.prevWav();
     progress = tts.reading_wav_index.toDouble() / count_text.toDouble();
@@ -94,6 +119,8 @@ class _ReaderPage extends State<ReaderPage>
   @override
   void dispose() {
     super.dispose();
+    player.dispose();
+    pretimer?.cancel();
     try{
       tts.dispose();
     }catch(err){
@@ -258,7 +285,7 @@ class _ReaderPage extends State<ReaderPage>
                     height: 40,
                   ),
                   Text(
-                    "ДАРААГИЙН ҮГ",
+                    started==false?"ЭХЛЭХ":"ДАРААГИЙН ҮГ",
                     style: Theme.of(context)
                         .textTheme
                         .displayLarge!
@@ -300,16 +327,16 @@ class _ReaderPage extends State<ReaderPage>
                   AspectRatio(
                       aspectRatio: 4 / 3,
                       child: GestureDetector(
-                        onTap: _onPlay,
+                        onTap:  started==false?_onPlayPre:_onPlay,
                         child: Container(
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Theme.of(context).colorScheme.primary,
+                                color: started==false?Theme.of(context).colorScheme.surface:Theme.of(context).colorScheme.primary,
                                 border: ProgressBorder.all(
                                     color: const Color(0XFFFFFFFF).withOpacity(0.4),
                                     width: 10,
                                     progress: progress)),
-                            child: const Image(image: AssetImage("img/forward.png"))),
+                            child: started==false?const Icon(Icons.play_circle_filled_outlined, color: Colors.white, size: 80):const Image(image: AssetImage("img/forward.png"))),
                       ))
                 ],
               ),

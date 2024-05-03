@@ -10,6 +10,7 @@ import 'package:writles/choseusers.dart';
 import 'package:writles/components/PointedLine.dart';
 import 'package:http/http.dart' as http;
 import 'package:writles/utils/SecureStorage.dart';
+import 'package:writles/utils/checkInternet.dart';
 
 class InitPage extends StatefulWidget {
   const InitPage({super.key});
@@ -27,7 +28,9 @@ class _InitPage extends State<InitPage> with SingleTickerProviderStateMixin {
   String apiflask = dotenv.get("API_FLASK_CUSTOMER", fallback: "");
 
   login() async {
-
+    if(! await connectiveCheck(context)){
+      return;
+    }
 
     final token = await firebaseMessaging.getToken();
     var jsonData = {
@@ -39,35 +42,41 @@ class _InitPage extends State<InitPage> with SingleTickerProviderStateMixin {
     var body = json.encode(jsonData);
     var uri = Uri.http(apiflask, 'user/login');
 
+    try {
+      http.Response response = await http.post(uri,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: body
+      );
+      Map<String, dynamic> responseBodyJson = json.decode(response.body);
 
-    http.Response response = await http.post(uri,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body:body
-    );
-    Map<String, dynamic> responseBodyJson = json.decode(response.body);
-
-    if (response.statusCode == 200) {
-      String access_token=responseBodyJson["access_token"];
-      SecureStorage().writeSecureData("token", access_token);
-
-      if(responseBodyJson["status"]=="success"){
-        Navigator.pushNamed(context,"/home");
-      }else{
-        Navigator.of(context).push(MaterialPageRoute(builder:(context)=>ChooseUsers(users:responseBodyJson["users"])));
+      if (response.statusCode == 200) {
+        String access_token = responseBodyJson["access_token"];
+        SecureStorage().writeSecureData("token", access_token);
+        if (responseBodyJson["status"] == "success") {
+          Navigator.pushNamed(context, "/home");
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+              ChooseUsers(users: responseBodyJson["users"])));
+        }
+      } else {
+        CherryToast.error(
+          title: Text(
+            responseBodyJson["detail"],
+            style: Theme
+                .of(context)
+                .textTheme
+                .labelSmall!
+                .copyWith(color: Theme
+                .of(context)
+                .colorScheme
+                .surface),
+          ),
+        ).show(context);
       }
-    } else {
-      CherryToast.error(
-        title: Text(
-          responseBodyJson["detail"],
-          style: Theme.of(context)
-              .textTheme
-              .labelSmall!
-              .copyWith(color: Theme.of(context).colorScheme.surface),
-        ),
-      ).show(context);
-
+    }catch(err){
+      print("login err");
     }
   }
 

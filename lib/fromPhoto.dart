@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:writles/providers/generalProvider.dart';
+import 'package:writles/utils/checkInternet.dart';
 import 'package:writles/utils/image_helper.dart';
 import 'package:writles/utils/ocr.dart';
 
@@ -310,6 +311,9 @@ class _FromPhotoPage extends State<FromPhotoPage> {
             ),
             InkWell(
               onTap: () async {
+                if(! await connectiveCheck(context)){
+                  return;
+                }
                 if(_image!=null){
                   setState(() {
                     convert=true;
@@ -389,6 +393,9 @@ class _FromPhotoPage extends State<FromPhotoPage> {
             ),
             InkWell(
               onTap: () async {
+                if(! await connectiveCheck(context)){
+                  return;
+                }
                 Navigator.of(context).push(MaterialPageRoute(builder:(context)=>NotificatierScreen(garchig:context.read<GeneralProvider>().garchig.text,
                     eh:context.read<GeneralProvider>().eh.text
                 )));

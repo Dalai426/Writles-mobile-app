@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:writles/Components/tabs.dart';
 import 'package:writles/providers/generalProvider.dart';
 
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
   @override
@@ -35,7 +36,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       Container(
                         constraints: const BoxConstraints(maxWidth: 190),
                         child: Text(
-                            "Та ${context.read<GeneralProvider>().userLevel.toInt()} дүгээр түвшин тийм биз ??",
+                            context.watch<GeneralProvider>().username.text.isEmpty?
+                            "Та ${context.watch<GeneralProvider>().userLevel.toInt()} дүгээр түвшин тийм биз ??":
+                            "${context.watch<GeneralProvider>().username.text} , та ${context.watch<GeneralProvider>().userLevel.toInt()} дүгээр түвшин тийм биз ??",
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge!

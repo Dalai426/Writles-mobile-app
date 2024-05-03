@@ -26,52 +26,6 @@ class _FinishPage extends State<FinishPage> {
                 ),
                 const Image(
                   image: AssetImage("img/Thankyou.png"),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 80,),
-                      GestureDetector(
-                          onTap: () async {
-                          },
-                          child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 50),
-                              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                              decoration: BoxDecoration(
-                                  border: Border(
-                                      top: BorderSide(
-                                          color: Theme.of(context).colorScheme.secondary,
-                                          width: 1)),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(15)),
-                              child:
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  const Image(
-                                    image: AssetImage("img/ig.png"),
-                                    width: 30,
-                                  ),
-                                  Text(
-                                    "ЗУРГААР ШАЛГАХ",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium!
-                                        .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary),
-                                  ),
-                                  const Image(
-                                    image: AssetImage("img/ig.png"),
-                                    width: 30,
-                                  ),
-                                ],
-                              )
-                          ))
-                    ],
-                  ),
                 )
             ])
           )

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:writles/utils/image_helper.dart';
 
 import '../../providers/generalProvider.dart';
+import '../../utils/checkInternet.dart';
 import '../../utils/ocr.dart';
 
 final imageHelper = ImageHelper();
@@ -87,6 +88,9 @@ class _Tabwithphoto extends State<tabwithphoto> {
                         flex: 1,
                         child: InkWell(
                             onTap: () async {
+                              if(! await connectiveCheck(context)){
+                                return;
+                              }
                               if(_image!=null){
                                 setState(() {
                                   convert=true;
