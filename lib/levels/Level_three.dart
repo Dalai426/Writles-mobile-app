@@ -10,101 +10,107 @@ import 'dart:io';
 import 'package:logger/logger.dart';
 
 class LevelThree extends Levels {
-  List<List<String?>>? wavs;
+  List<List<String>> wavs = [];
   var logger = Logger();
 
   LevelThree();
 
   void init(String text, int level, {String? title}) async {
-    List<List<String>> strings = spilitSetences(text.trim());
-
-    if(title!=null) {
-      strings.insert(0,[title]);
-      hasTitle=true;
-    }
-
-    count_text = strings.length;
-
     String apiflask = dotenv.get("API_FLASK", fallback: "");
     String flaskapikey = dotenv.get("FLASK_API_KEY_VALUE", fallback: "");
-    final Map<String, String> header = {"X-API-KEY": flaskapikey};
 
     String dir = "${(await getApplicationDocumentsDirectory()).path}/wavs";
 
     if (!Directory(dir).existsSync()) {
       await Directory(dir).create(recursive: true);
     }
+    final Map<String, String> queryParams = {
+      'level': '3',
+      'text': text,
+      'voice': 'female3'
+    };
 
-    wavs = await Future.wait(strings.asMap().entries.map((subList) async {
-      int index = subList.key;
-      return Future.wait(subList.value.asMap().entries.map((el) async {
-        String word = el.value;
-        final Map<String, String> queryParams = {
-          'voice': 'female3',
-          'text': word,
-        };
+    if (title != null && title.isNotEmpty) {
+      hasTitle = true;
+      queryParams["title"] = title;
+    }
 
-        var uri = Uri.http(apiflask, 'tts/extract', queryParams);
-        http.Response response = await http.get(uri, headers: header);
-        if (response.statusCode == 200) {
-          File file = File('$dir/${index}_${el.key}_wav.wav');
-          file.writeAsBytes(response.bodyBytes);
-          return file.path;
+    var uri = Uri.http(apiflask, 'tts/extract-full', queryParams);
+    final client = http.Client();
+
+    try {
+      var request = http.Request('GET', uri);
+      final response = await client.send(request);
+
+      int vyeKey = 0;
+      List<String> word = [];
+      List<int> audio = [];
+
+      await for (var chunk in response.stream) {
+        int len = chunk.length;
+
+        if (len == 1) {
+          wavs.add(List.of(word));
+          word.clear();
+        } else if (len == 3) {
+          File file = File('$dir/${vyeKey}_wav.wav');
+          await file.writeAsBytes(audio);
+          word.add(file.path);
+          vyeKey++;
+          audio.clear();
         } else {
-          return null;
+          audio.addAll(List.of(chunk));
         }
-      }).toList());
-    }).toList());
-
+      }
+    } finally {
+      client.close();
+    }
+    count_text = wavs.length;
   }
 
-  Future<StreamSubscription?> nextWav(BuildContext context, Function function) async {
-
+  Future<StreamSubscription?> nextWav(
+      BuildContext context, Function function) async {
     List<String?>? listPerReading;
     StreamSubscription? streamSubscription;
 
     try {
       if (reading_wav_index >= count_text) {
         reading_wav_index = count_text;
-        listPerReading = wavs!.elementAt(count_text - 1);
+        listPerReading = wavs.elementAt(count_text - 1);
       } else {
-        listPerReading = wavs!.elementAt(reading_wav_index);
+        listPerReading = wavs.elementAt(reading_wav_index);
         reading_wav_index++;
       }
 
-
       int length = listPerReading.length;
-
-
-      int i = hasTitle == true && reading_wav_index == 1 ? 0 : 1;
+      int i = hasTitle == true && reading_wav_index == 1 ? -1 : 0;
       int count = 0;
-      bool bell=false;
+      bool bell = false;
 
       streamSubscription = p1.onPlayerComplete.listen((event) async {
+        i++;
         int second = 1000;
         if (i == length) {
-          second = 4000;
+          second = 5000;
         }
         if (i < length) {
           delayTimer = Timer(Duration(milliseconds: second), () async {
-              await p1.play(DeviceFileSource(listPerReading!.elementAt(i)!));
-              i++;
+            await p1.play(DeviceFileSource(listPerReading!.elementAt(i)!));
           });
         } else {
           if (count < 2) {
-            i=1;
+            i = 0;
             count++;
-            delayTimer=Timer(const Duration(milliseconds: 4000),() async {
-                await p1.play(DeviceFileSource(listPerReading!.elementAt(0)!));
+            delayTimer = Timer(const Duration(milliseconds: 5000), () async {
+              await p1.play(DeviceFileSource(listPerReading!.elementAt(0)!));
             });
-
           } else {
-            if(bell==false){
-              bell=true;
-              delayTimer = Timer(const Duration(milliseconds: 5000), () async {
-                  await p1.play(AssetSource("audios/bell.wav"));
+            if (bell == false) {
+              bell = true;
+              delayTimer = Timer(const Duration(milliseconds: 6000), () async {
+                await p1.play(AssetSource("audios/bell.wav"));
               });
-            }else {
+            } else {
               delayTimer = Timer(const Duration(milliseconds: 2000), () async {
                 await function();
               });
@@ -112,14 +118,13 @@ class LevelThree extends Levels {
           }
         }
       });
-      if (0 < length) {
-        if(i==0) {
-          await p1.play(AssetSource("audios/garchig.wav"));
-        }else{
-          await p1.play(DeviceFileSource(listPerReading.elementAt(0)!));
-        }
-        return streamSubscription;
+
+      if (hasTitle == true && reading_wav_index == 1) {
+        await p1.play(AssetSource("audios/garchig.wav"));
+      } else {
+        await p1.play(DeviceFileSource(listPerReading.elementAt(0)!));
       }
+      return streamSubscription;
     } catch (e) {
       CherryToast.warning(
         title: Text(
@@ -133,11 +138,7 @@ class LevelThree extends Levels {
 
       return streamSubscription;
     }
-    return streamSubscription;
   }
-
-
-
 
   void prevWav() async {
     cancelDelay();
@@ -146,113 +147,5 @@ class LevelThree extends Levels {
     } else {
       reading_wav_index--;
     }
-  }
-
-  List<List<String>> spilitSetences(String string) {
-    List<List<String>> list = [];
-
-    List<String> sentences = string
-        .split(RegExp(r'[.!?]'))
-        .where((part) => part.isNotEmpty)
-        .toList();
-
-    sentences.forEach((sentence) {
-
-      sentence = sentence.replaceAll(RegExp('\\s+,'), ",");
-      sentence = sentence.replaceAllMapped(RegExp(r',(\S)'), (match) {
-        return ', ${match.group(1)}';
-      });
-
-      sentence = sentence.replaceAll(RegExp('\\s+"'), '"');
-      sentence = sentence.replaceAllMapped(RegExp(r'"(\S)'), (match) {
-        return '" ${match.group(1)}';
-      });
-
-      List<String> words = sentence.trim().split(RegExp(r'\s+'));
-      List<String> per_wavs = [];
-
-
-      int i = 0;
-      if (words.length % 2 != 0) {
-        List<String> first = [];
-        i = 1;
-        first.add(words[0]);
-        list.add(first);
-      }
-      // Би бор морь, унав
-      // Би бор морь , унав
-
-      String str = "";
-      int count_per_wav = 0;
-      for (i; i < words.length; i++) {
-        if (count_per_wav <= 1) {
-
-          if (RegExp(r'[",|()-]').hasMatch(words[i])) {
-            List<String> stop = words[i]
-                .split(RegExp(r'[,|"()]'))
-                .where((part) => part.isNotEmpty)
-                .toList();
-            for (int j = 0; j < stop.length; j++) {
-              if (j == 0) {
-                if (str.isNotEmpty) {
-                  str += " ";
-                }
-                str += stop[j];
-                per_wavs.add(str);
-              } else {
-                per_wavs.add(stop[j]);
-              }
-              str = "";
-            }
-          } else {
-            if (str.isNotEmpty) {
-              str += " ";
-            }
-            str += words[i];
-          }
-
-          count_per_wav += 1;
-        } else {
-          per_wavs.add(str);
-          list.add(List.from(per_wavs));
-          per_wavs.clear();
-          str = "";
-          if (RegExp(r'[",|()-]').hasMatch(words[i])) {
-
-
-            List<String> stop = words[i]
-                .split(RegExp(r'[,|"()]'))
-                .where((part) => part.isNotEmpty)
-                .toList();
-
-            for (int j = 0; j < stop.length; j++) {
-              if (j == 0) {
-                if (str.isNotEmpty) {
-                  str += " ";
-                }
-                str += stop[j];
-                per_wavs.add(str);
-              } else {
-                per_wavs.add(stop[j]);
-              }
-              str = "";
-            }
-          } else {
-            str = words[i];
-          }
-
-          count_per_wav = 0;
-        }
-      }
-
-      if (str.isNotEmpty) {
-        per_wavs.add(str);
-        list.add(List.from(per_wavs));
-        per_wavs.clear();
-      }
-    });
-
-    logger.t(list);
-    return list;
   }
 }

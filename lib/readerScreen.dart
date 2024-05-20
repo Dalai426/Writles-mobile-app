@@ -29,9 +29,9 @@ class _ReaderPage extends State<ReaderPage>
   StreamSubscription? player_info;
   double progress = 0.0;
   bool fetching = true;
-  bool started=false;
-  Logger logger =  Logger();
-  AudioPlayer player=AudioPlayer();
+  bool started = false;
+  Logger logger = Logger();
+  AudioPlayer player = AudioPlayer();
   StreamSubscription? introsub;
   Timer? pretimer;
 
@@ -42,28 +42,32 @@ class _ReaderPage extends State<ReaderPage>
   }
 
   getData() async {
-    level = widget.argument!.level.toInt();
-    if(level==1){
-      tts = LevelOne();
-    }else if(level==2){
-      tts=LevelTwo();
-    }else if(level==3){
-      tts=LevelThree();
-    }else{
-      tts=LevelFour();
-    };
-    String replacedText = widget.argument!.title.replaceAll(RegExp(r'\s+'), '');
-    if (replacedText.isNotEmpty) {
-      title = widget.argument!.title;
-      await tts.init(widget.argument!.text, level, title: title);
-    } else {
-      await tts.init(widget.argument!.text, level);
+    try {
+      level = widget.argument!.level.toInt();
+      if (level == 1) {
+        tts = LevelOne();
+      } else if (level == 2) {
+        tts = LevelTwo();
+      } else if (level == 3) {
+        tts = LevelThree();
+      } else {
+        tts = LevelFour();
+      }
+      String replacedText =
+          widget.argument!.title.replaceAll(RegExp(r'\s+'), '');
+      if (replacedText.isNotEmpty) {
+        title = widget.argument!.title;
+        await tts.init(widget.argument!.text, level, title: title);
+      } else {
+        await tts.init(widget.argument!.text, level);
+      }
+      count_text = tts.count_text;
+      setState(() {
+        fetching = false;
+      });
+    } catch (err) {
+      Navigator.pop(context);
     }
-    count_text = tts.count_text;
-
-    setState(() {
-      fetching = false;
-    });
   }
 
   late final animationController = AnimationController(
@@ -71,34 +75,25 @@ class _ReaderPage extends State<ReaderPage>
     duration: const Duration(seconds: 1),
   );
 
-
-
   void _onPlayPre() async {
-    if (player.state == PlayerState.playing || pretimer!=null) {
+    if (player.state == PlayerState.playing || pretimer != null) {
       return;
     }
-    await introsub?.cancel();
-
-    player.stop();
-
-      introsub=player.onPlayerComplete.listen((event) {
-        player.stop();
-        pretimer=Timer(const Duration(milliseconds: 2000), (){
-          setState(() {
-            started=true;
-          });
+    introsub = player.onPlayerComplete.listen((event) {
+      pretimer = Timer(const Duration(milliseconds: 2000), () {
+        setState(() {
+          started = true;
         });
       });
-
-    player.play(AssetSource("audios/intro.wav"));
-
+    });
+    await player.play(AssetSource("audios/intro.wav"));
   }
 
   void _onPlay() async {
     await tts.cancelDelay();
     await tts.p1.stop();
-    if(tts.reading_wav_index<tts.count_text){
-      if(player_info!=null){
+    if (tts.reading_wav_index < tts.count_text) {
+      if (player_info != null) {
         await player_info?.cancel();
       }
       player_info = await tts.nextWav(context, _onPlay);
@@ -108,7 +103,7 @@ class _ReaderPage extends State<ReaderPage>
   }
 
   void _prev() async {
-    if(player_info!=null){
+    if (player_info != null) {
       await player_info?.cancel();
     }
     tts.prevWav();
@@ -121,9 +116,9 @@ class _ReaderPage extends State<ReaderPage>
     super.dispose();
     player.dispose();
     pretimer?.cancel();
-    try{
+    try {
       tts.dispose();
-    }catch(err){
+    } catch (err) {
       logger.t('end yumuu');
     }
   }
@@ -140,8 +135,8 @@ class _ReaderPage extends State<ReaderPage>
           : SingleChildScrollView(
               child: Center(
                   child: Container(
-              padding:
-                  const EdgeInsets.only(left: 20, right: 20, top: 60, bottom: 20),
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 60, bottom: 20),
               child: Column(
                 children: [
                   Row(
@@ -285,7 +280,7 @@ class _ReaderPage extends State<ReaderPage>
                     height: 40,
                   ),
                   Text(
-                    started==false?"ЭХЛЭХ":"ДАРААГИЙН ҮГ",
+                    started == false ? "ЭХЛЭХ" : "ДАРААГИЙН ҮГ",
                     style: Theme.of(context)
                         .textTheme
                         .displayLarge!
@@ -327,16 +322,23 @@ class _ReaderPage extends State<ReaderPage>
                   AspectRatio(
                       aspectRatio: 4 / 3,
                       child: GestureDetector(
-                        onTap:  started==false?_onPlayPre:_onPlay,
+                        onTap: started == false ? _onPlayPre : _onPlay,
                         child: Container(
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: started==false?Theme.of(context).colorScheme.surface:Theme.of(context).colorScheme.primary,
+                                color: started == false
+                                    ? Theme.of(context).colorScheme.surface
+                                    : Theme.of(context).colorScheme.primary,
                                 border: ProgressBorder.all(
-                                    color: const Color(0XFFFFFFFF).withOpacity(0.4),
+                                    color: const Color(0XFFFFFFFF)
+                                        .withOpacity(0.4),
                                     width: 10,
                                     progress: progress)),
-                            child: started==false?const Icon(Icons.play_circle_filled_outlined, color: Colors.white, size: 80):const Image(image: AssetImage("img/forward.png"))),
+                            child: started == false
+                                ? const Icon(Icons.play_circle_filled_outlined,
+                                    color: Colors.white, size: 80)
+                                : const Image(
+                                    image: AssetImage("img/forward.png"))),
                       ))
                 ],
               ),
@@ -360,7 +362,8 @@ class _ReaderPage extends State<ReaderPage>
             expand: false,
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
-                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                 child: ListView(
                   controller: scrollController,
                   children: [

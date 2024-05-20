@@ -35,41 +35,6 @@ class Levels{
     }
   }
 
-
-  // Future<String> loadAsset(String assetPath) async {
-  //   // Load the asset file
-  //   ByteData data = await rootBundle.load(assetPath);
-  //   // Write the data to a temporary file
-  //   Directory tempDir = await getTemporaryDirectory();
-  //   File tempFile = File('${tempDir.path}/garchig.wav');
-  //   await tempFile.writeAsBytes(data.buffer.asUint8List(), flush: true);
-  //   return tempFile.path;
-  // }
-  //
-  // Future<File?> wavToTitle(String title) async{
-  //   String apiflask = dotenv.get("API_FLASK", fallback: "");
-  //   String flaskapikey = dotenv.get("FLASK_API_KEY_VALUE", fallback: "");
-  //   final Map<String, String> header = {"X-API-KEY": flaskapikey};
-  //
-  //   String dir = "${(await getApplicationDocumentsDirectory()).path}/wavs";
-  //   if (!Directory(dir).existsSync()) {
-  //     await Directory(dir).create(recursive: true);
-  //   }
-  //   final Map<String, String> queryParams = {
-  //     'voice': '2',
-  //     'text': title,
-  //   };
-  //   var uri = Uri.http(apiflask, 'tts/extract', queryParams);
-  //   http.Response response=await http.get(uri, headers:header);
-  //   if (response.statusCode == 200) {
-  //     File wav_title = File('${dir}/garchig_wav.wav');
-  //     wav_title.writeAsBytes(response.bodyBytes);
-  //     return wav_title;
-  //   }else{
-  //     return null;
-  //   }
-  // }
-
   bool checkEgshig(String char){
     List<String> egshigList = ['а', 'и', 'о', 'э', 'ө', 'ү','й','ы','у'
       ,'я','ю','ё','е'];

@@ -125,19 +125,11 @@ class _NavigatorPage extends State<NavigatorPage> {
           }
           bool wt=await checkTextNull(context.read<GeneralProvider>().eh.text);
           if(!wt){
-            // Navigator.of(context).push(MaterialPageRoute(builder:(context)=>ReaderPage(argument: new ScreenArguments(
-            //     context.read<GeneralProvider>().garchig.text,
-            //     context.read<GeneralProvider>().eh.text,
-            //     context.read<GeneralProvider>().userLevel
-            // ))));
-
-            Navigator.of(context).push(MaterialPageRoute(builder:(context)=>ReaderPageBest(argument: new ScreenArguments(
+            Navigator.of(context).push(MaterialPageRoute(builder:(context)=>ReaderPage(argument: new ScreenArguments(
                 context.read<GeneralProvider>().garchig.text,
                 context.read<GeneralProvider>().eh.text,
                 context.read<GeneralProvider>().userLevel
             ))));
-
-
           }else{
             CherryToast.warning(
               title: Text(
